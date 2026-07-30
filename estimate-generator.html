@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Estimate & Quote Generator — Send a Priced Quote Today</title>
+<meta name="description" content="Free estimate and quote generator for contractors and freelancers: itemise the work, set how long the price holds, print or save as PDF.">
+<link rel="canonical" href="https://papertrailforms.com/estimate-generator.html">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128441;</text></svg>">
+<link rel="stylesheet" href="styles.css">
+<script src="config.js" defer></script>
+<script src="tools.js" defer></script>
+</head>
+<body data-tool="estimate">
+<header class="site-header"><nav class="nav container">
+  <a class="brand" href="index.html">&#128441; Paper Trail <span style="opacity:.75">Forms</span></a>
+  <div class="nav-links">
+    <a href="invoice-generator.html">Invoice</a>
+    <a href="receipt-maker.html">Receipt</a>
+    <a href="estimate-generator.html">Estimate</a>
+    <a href="index.html#calculators">Calculators</a>
+    <a href="guides/index.html">Guides</a>
+    <a class="btn-cta" data-shop-link href="#">Printable Forms</a>
+  </div>
+</nav></header>
+<main class="container">
+  <p class="breadcrumb"><a href="./index.html">Home</a> &rsaquo; Free Estimate &amp; Quote Generator</p>
+  <div class="tool-layout">
+    <form class="panel" id="tool-form" onsubmit="return false;">
+      <h2>Fill this in</h2>
+      <p class="hint">Everything updates as you type. Nothing leaves your browser.</p>
+      <div class="field"><label for="from">Your business name</label><input type="text" id="from" placeholder="Rivera Studio"></div>
+<div class="field"><label for="fromDetails">Your address and contact</label><textarea id="fromDetails" placeholder="12 Bishop Lane&#10;Halifax NS B3H 1A1&#10;hello@riverastudio.ca"></textarea></div>
+<div class="field"><label for="to">Client name</label><input type="text" id="to" placeholder="Brightline Cleaning Co."></div>
+<div class="field"><label for="toDetails">Client address</label><textarea id="toDetails" placeholder="88 Water Street&#10;Dartmouth NS B2Y 4S1"></textarea></div>
+<div class="row2"><div class="field"><label for="number">Estimate number</label><input type="text" id="number" placeholder="INV-0001"></div><div class="field"><label for="date">Estimate date</label><input type="date" id="date" placeholder=""></div></div>
+<div class="field"><label for="terms">Valid for</label><select id="terms"><option value="due">Due on receipt</option><option value="net7">Net 7</option><option value="net14">Net 14</option><option value="net15">Net 15</option><option value="net30">Net 30</option><option value="net45">Net 45</option><option value="net60">Net 60</option><option value="net90">Net 90</option><option value="eom">End of month</option><option value="eom15">15th of following month</option></select><div class="note">How long the client has to accept.</div></div>
+<div class="field"><label for="currency">Currency</label><select id="currency"><option value="USD">USD — US dollar</option><option value="CAD">CAD — Canadian dollar</option><option value="EUR">EUR — Euro</option><option value="GBP">GBP — British pound</option><option value="AUD">AUD — Australian dollar</option><option value="NZD">NZD — NZ dollar</option><option value="INR">INR — Indian rupee</option><option value="ZAR">ZAR — South African rand</option></select></div>
+<div class="field"><label>Line items</label><div class="line-items" id="items"></div><button type="button" class="btn-mini" id="add-item">+ Add line</button></div>
+<div class="row2"><div class="field"><label for="taxLabel">Tax label</label><input type="text" id="taxLabel" placeholder="Sales tax / VAT / GST"></div><div class="field"><label for="taxPct">Tax %</label><input type="number" id="taxPct" placeholder="0" step="any"></div></div>
+<div class="row2"><div class="field"><label for="discountType">Discount type</label><select id="discountType"><option value="amount">Fixed amount</option><option value="percent">Percentage</option></select></div><div class="field"><label for="discountValue">Discount value</label><input type="number" id="discountValue" placeholder="0" step="any"></div></div>
+<div class="field"><label for="shipping">Shipping or delivery</label><input type="number" id="shipping" placeholder="0" step="any"></div>
+<div class="field"><label for="payment">How to pay</label><textarea id="payment" placeholder="e-transfer to hello@riverastudio.ca&#10;or cheque payable to Rivera Studio"></textarea></div>
+<div class="field"><label for="notes">Notes / terms</label><textarea id="notes" placeholder="Thank you."></textarea></div>
+      <div class="tool-actions">
+        <button type="button" class="btn btn-primary" id="print-doc">Print / Save as PDF</button>
+        <button type="button" class="btn-mini" id="reset-doc">Start over</button>
+      </div>
+    </form>
+    <div>
+      <div class="doc" id="doc"></div>
+      <p class="hint no-print" style="margin-top:10px">Tip: choose &ldquo;Save as PDF&rdquo;
+      as the destination in the print dialog. Only the document prints &mdash; not this page.</p>
+    </div>
+  </div>
+
+  <article class="prose">
+  <h1>Free Estimate &amp; Quote Generator</h1>
+  <p>An estimate is a priced proposal, not a bill. Itemise the work, set how long the price holds, and send it the same day the client asks — speed wins more jobs than polish does.</p>
+  <h2>How it works</h2>
+  <ol class="steps">
+  <li>Fill in your details and the client's. They are remembered in this browser for next time.</li>
+  <li>Add a line for each item or task, with a quantity and a rate.</li>
+  <li>Set tax, any discount, and the terms. The totals recalculate as you type.</li>
+  <li>Press <strong>Print / Save as PDF</strong> and choose Save as PDF.</li>
+  </ol>
+  <div class="notice"><strong>Your data stays yours.</strong> This tool makes no
+  network requests. What you type is held in your browser's local storage on your
+  own machine, so closing the tab does not lose it &mdash; and clearing your browser
+  data removes it entirely.</div>
+  <h2>Frequently asked questions</h2>
+<details class="faq"><summary>Is an estimate legally binding?</summary><p>Generally an estimate is an offer rather than a contract, and it becomes binding when the client accepts it on the stated terms. Wording matters, so if the number could move, say so on the document and say why.</p></details>
+<details class="faq"><summary>What is the difference between an estimate and a quote?</summary><p>In everyday use a quote is a firm price and an estimate is an approximation that may change. Both use the same document; what differs is what you promise in the notes.</p></details>
+<details class="faq"><summary>How long should an estimate stay valid?</summary><p>Long enough for the client to decide, short enough that your material costs have not moved — 14 to 30 days is the usual range. Set it in the “Valid for” field so it prints on the document.</p></details>
+  <h2>Keep reading</h2>
+  <p><a href="./guides/index.html">All guides</a> &middot; <a href="./guides/what-to-include-on-an-invoice.html">What to include on an invoice</a> &middot; <a href="./guides/invoice-vs-receipt-vs-estimate.html">Invoice vs receipt vs estimate</a> &middot; <a href="./guides/net-30-payment-terms-explained.html">Net 30 explained</a></p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">
+  <div class="foot-links">
+    <a href="index.html">Home</a>
+    <a href="invoice-generator.html">Invoice Generator</a>
+    <a href="receipt-maker.html">Receipt Maker</a>
+    <a href="estimate-generator.html">Estimate Generator</a>
+    <a href="guides/index.html">Guides</a>
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+  </div>
+  <p class="legal">Paper Trail Forms provides free document tools and general business
+  information. It is not a law firm, an accounting firm, or a tax adviser, and
+  nothing on this site is legal, accounting, or tax advice &mdash; requirements
+  for invoices, receipts, late fees, and record retention vary by country and by
+  jurisdiction, so verify what applies to you before relying on it. The tools run
+  entirely in your browser: what you type is never transmitted to us and is
+  stored only in your own browser. &copy; 2026 Paper Trail Forms</p>
+</div></footer>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invoice Due Date Calculator — Net 30, EOM, and Early-Payment Discounts</title>
+<meta name="description" content="Work out an invoice due date from any payment term, and price an early-payment discount like 2/10 net 30 before you offer it.">
+<link rel="canonical" href="https://papertrailforms.com/payment-terms-calculator.html">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128441;</text></svg>">
+<link rel="stylesheet" href="styles.css">
+<script src="config.js" defer></script>
+<script src="tools.js" defer></script>
+</head>
+<body data-tool="payment-terms">
+<header class="site-header"><nav class="nav container">
+  <a class="brand" href="index.html">&#128441; Paper Trail <span style="opacity:.75">Forms</span></a>
+  <div class="nav-links">
+    <a href="invoice-generator.html">Invoice</a>
+    <a href="receipt-maker.html">Receipt</a>
+    <a href="estimate-generator.html">Estimate</a>
+    <a href="index.html#calculators">Calculators</a>
+    <a href="guides/index.html">Guides</a>
+    <a class="btn-cta" data-shop-link href="#">Printable Forms</a>
+  </div>
+</nav></header>
+<main class="container">
+  <p class="breadcrumb"><a href="./index.html">Home</a> &rsaquo; Invoice Due Date Calculator</p>
+  <div class="tool-layout">
+    <form class="panel" id="tool-form" onsubmit="return false;">
+      <h2>Your numbers</h2>
+      <p class="hint">Results update as you type. Nothing leaves your browser.</p>
+      <div class="field"><label for="date">Invoice date</label><input type="date" id="date"></div>
+<div class="field"><label for="terms">Payment terms</label><select id="terms"><option value="due">Due on receipt</option><option value="net7">Net 7</option><option value="net14">Net 14</option><option value="net15">Net 15</option><option value="net30" selected>Net 30</option><option value="net45">Net 45</option><option value="net60">Net 60</option><option value="net90">Net 90</option><option value="eom">End of month</option><option value="eom15">15th of following month</option></select></div>
+<div class="field"><label for="amount">Invoice amount (optional)</label><input type="number" step="any" id="amount" value="1000"></div>
+<div class="field"><label for="discPct">Early-payment discount % (optional)</label><input type="number" step="any" id="discPct" value="2"></div>
+<div class="field"><label for="discDays">Paid within this many days</label><input type="number" step="any" id="discDays" value="10"></div>
+<div class="field"><label for="currency">Currency</label><select id="currency"><option value="USD">USD — US dollar</option><option value="CAD">CAD — Canadian dollar</option><option value="EUR">EUR — Euro</option><option value="GBP">GBP — British pound</option><option value="AUD">AUD — Australian dollar</option><option value="NZD">NZD — NZ dollar</option><option value="INR">INR — Indian rupee</option><option value="ZAR">ZAR — South African rand</option></select></div>
+    </form>
+    <div class="readout">
+      <div class="big-label" id="out-label">Payment due</div>
+      <div class="big" id="out-big">&mdash;</div>
+      <div class="rows" id="out-rows"></div>
+      <p class="explain">Figures are rounded to two decimals. Use them as a working
+      estimate and check anything that has to be exact against your own records.</p>
+    </div>
+  </div>
+
+  <article class="prose">
+  <h1>Invoice Due Date Calculator</h1>
+  <p>Net 30 from the 15th is not “the 15th of next month.” Pick a term and get the exact due date, plus what an early-payment discount really costs you if you offer one.</p>
+  <h2>Frequently asked questions</h2>
+<details class="faq"><summary>What does “net 30” actually mean?</summary><p>Payment is due 30 days after the invoice date, not at the end of the following month and not 30 business days. If you mean something else, write that instead — ambiguity is what turns into a 60-day wait.</p></details>
+<details class="faq"><summary>What does 2/10 net 30 mean?</summary><p>The client may take 2% off if they pay within 10 days; otherwise the full amount is due at 30 days. The calculator shows what you give up and what that discount costs you on an annualised basis — it is usually far more than it looks.</p></details>
+<details class="faq"><summary>Do shorter terms actually get me paid faster?</summary><p>Often, yes, and the bigger lever is invoicing the day the work finishes rather than at month end. See <a href="./guides/net-30-payment-terms-explained.html">net 30 payment terms explained</a> for the trade-offs.</p></details>
+  <h2>Keep reading</h2>
+  <p><a href="./guides/index.html">All guides</a> &middot; <a href="./invoice-generator.html">Free invoice generator</a> &middot; <a href="./guides/how-to-charge-late-fees.html">How to charge late fees</a> &middot; <a href="./guides/how-to-set-your-freelance-rate.html">Setting your rate</a></p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">
+  <div class="foot-links">
+    <a href="index.html">Home</a>
+    <a href="invoice-generator.html">Invoice Generator</a>
+    <a href="receipt-maker.html">Receipt Maker</a>
+    <a href="estimate-generator.html">Estimate Generator</a>
+    <a href="guides/index.html">Guides</a>
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+  </div>
+  <p class="legal">Paper Trail Forms provides free document tools and general business
+  information. It is not a law firm, an accounting firm, or a tax adviser, and
+  nothing on this site is legal, accounting, or tax advice &mdash; requirements
+  for invoices, receipts, late fees, and record retention vary by country and by
+  jurisdiction, so verify what applies to you before relying on it. The tools run
+  entirely in your browser: what you type is never transmitted to us and is
+  stored only in your own browser. &copy; 2026 Paper Trail Forms</p>
+</div></footer>
+</body>
+</html>

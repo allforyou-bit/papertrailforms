@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Tax Calculator — Add Tax or Back It Out of a Total</title>
+<meta name="description" content="Add sales tax to a price, or work out the pre-tax figure from a total that already includes it. Works for VAT, GST, and HST too.">
+<link rel="canonical" href="https://papertrailforms.com/sales-tax-calculator.html">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128441;</text></svg>">
+<link rel="stylesheet" href="styles.css">
+<script src="config.js" defer></script>
+<script src="tools.js" defer></script>
+</head>
+<body data-tool="sales-tax">
+<header class="site-header"><nav class="nav container">
+  <a class="brand" href="index.html">&#128441; Paper Trail <span style="opacity:.75">Forms</span></a>
+  <div class="nav-links">
+    <a href="invoice-generator.html">Invoice</a>
+    <a href="receipt-maker.html">Receipt</a>
+    <a href="estimate-generator.html">Estimate</a>
+    <a href="index.html#calculators">Calculators</a>
+    <a href="guides/index.html">Guides</a>
+    <a class="btn-cta" data-shop-link href="#">Printable Forms</a>
+  </div>
+</nav></header>
+<main class="container">
+  <p class="breadcrumb"><a href="./index.html">Home</a> &rsaquo; Sales Tax Calculator</p>
+  <div class="tool-layout">
+    <form class="panel" id="tool-form" onsubmit="return false;">
+      <h2>Your numbers</h2>
+      <p class="hint">Results update as you type. Nothing leaves your browser.</p>
+      <div class="field"><label for="mode">Direction</label><select id="mode"><option value="add">Add tax to a pre-tax price</option><option value="remove">Back tax out of a total</option></select></div>
+<div class="field"><label for="amount">Amount</label><input type="number" step="any" id="amount" value="100"></div>
+<div class="field"><label for="rate">Tax rate %</label><input type="number" step="any" id="rate" value="8.25"></div>
+<div class="field"><label for="currency">Currency</label><select id="currency"><option value="USD">USD — US dollar</option><option value="CAD">CAD — Canadian dollar</option><option value="EUR">EUR — Euro</option><option value="GBP">GBP — British pound</option><option value="AUD">AUD — Australian dollar</option><option value="NZD">NZD — NZ dollar</option><option value="INR">INR — Indian rupee</option><option value="ZAR">ZAR — South African rand</option></select></div>
+    </form>
+    <div class="readout">
+      <div class="big-label" id="out-label">Total with tax</div>
+      <div class="big" id="out-big">&mdash;</div>
+      <div class="rows" id="out-rows"></div>
+      <p class="explain">Figures are rounded to two decimals. Use them as a working
+      estimate and check anything that has to be exact against your own records.</p>
+    </div>
+  </div>
+
+  <article class="prose">
+  <h1>Sales Tax Calculator</h1>
+  <p>Two jobs in one: add tax to a price, or take a total that already includes tax and split it back into the net amount and the tax. The reverse direction is the one people get wrong, because you cannot just subtract the percentage.</p>
+  <h2>Frequently asked questions</h2>
+<details class="faq"><summary>Why can't I just subtract the tax percentage from the total?</summary><p>Because the percentage was applied to the smaller pre-tax number, not to the total. Removing 13% tax from $113 gives $100, not $98.31. The tool divides by 1 + rate, which is the correct way round.</p></details>
+<details class="faq"><summary>Does this work for VAT, GST, and HST?</summary><p>Yes. They are all percentage taxes applied on top of a net price, so the arithmetic is identical — only the name and the rate change.</p></details>
+<details class="faq"><summary>What about stacked state and city tax?</summary><p>If both apply to the same base, add the rates together and enter the combined figure. If one is charged on top of the other, run the calculator twice.</p></details>
+  <h2>Keep reading</h2>
+  <p><a href="./guides/index.html">All guides</a> &middot; <a href="./invoice-generator.html">Free invoice generator</a> &middot; <a href="./guides/how-to-charge-late-fees.html">How to charge late fees</a> &middot; <a href="./guides/how-to-set-your-freelance-rate.html">Setting your rate</a></p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">
+  <div class="foot-links">
+    <a href="index.html">Home</a>
+    <a href="invoice-generator.html">Invoice Generator</a>
+    <a href="receipt-maker.html">Receipt Maker</a>
+    <a href="estimate-generator.html">Estimate Generator</a>
+    <a href="guides/index.html">Guides</a>
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+  </div>
+  <p class="legal">Paper Trail Forms provides free document tools and general business
+  information. It is not a law firm, an accounting firm, or a tax adviser, and
+  nothing on this site is legal, accounting, or tax advice &mdash; requirements
+  for invoices, receipts, late fees, and record retention vary by country and by
+  jurisdiction, so verify what applies to you before relying on it. The tools run
+  entirely in your browser: what you type is never transmitted to us and is
+  stored only in your own browser. &copy; 2026 Paper Trail Forms</p>
+</div></footer>
+</body>
+</html>

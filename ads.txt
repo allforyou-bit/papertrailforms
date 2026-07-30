@@ -1,0 +1,2 @@
+# Uncomment the line below once AdSense approves this domain (see docs/OPERATIONS.md).
+# google.com, pub-6709396576574623, DIRECT, f08c47fec0942fa0

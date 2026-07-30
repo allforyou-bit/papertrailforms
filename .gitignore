@@ -1,0 +1,17 @@
+# Internal documents never go in the public repo (RedSeal exposure lesson)
+docs/
+PRODUCTS/
+.claude/
+*.env
+*_token.json
+*_app.json
+
+# dev-only test dependency
+node_modules/
+package.json
+package-lock.json
+
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db

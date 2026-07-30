@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freelance Hourly Rate Calculator — What to Charge</title>
+<meta name="description" content="Work backwards from the income you want to the hourly rate that gets you there, after unbillable hours, expenses, time off, and tax.">
+<link rel="canonical" href="https://papertrailforms.com/hourly-rate-calculator.html">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128441;</text></svg>">
+<link rel="stylesheet" href="styles.css">
+<script src="config.js" defer></script>
+<script src="tools.js" defer></script>
+</head>
+<body data-tool="hourly-rate">
+<header class="site-header"><nav class="nav container">
+  <a class="brand" href="index.html">&#128441; Paper Trail <span style="opacity:.75">Forms</span></a>
+  <div class="nav-links">
+    <a href="invoice-generator.html">Invoice</a>
+    <a href="receipt-maker.html">Receipt</a>
+    <a href="estimate-generator.html">Estimate</a>
+    <a href="index.html#calculators">Calculators</a>
+    <a href="guides/index.html">Guides</a>
+    <a class="btn-cta" data-shop-link href="#">Printable Forms</a>
+  </div>
+</nav></header>
+<main class="container">
+  <p class="breadcrumb"><a href="./index.html">Home</a> &rsaquo; Freelance Hourly Rate Calculator</p>
+  <div class="tool-layout">
+    <form class="panel" id="tool-form" onsubmit="return false;">
+      <h2>Your numbers</h2>
+      <p class="hint">Results update as you type. Nothing leaves your browser.</p>
+      <div class="field"><label for="income">Take-home income you want per year</label><input type="number" step="any" id="income" value="60000"></div>
+<div class="field"><label for="expenses">Business expenses per year</label><input type="number" step="any" id="expenses" value="6000"></div>
+<div class="field"><label for="tax">Tax and contributions %</label><input type="number" step="any" id="tax" value="25"></div>
+<div class="field"><label for="weeksOff">Weeks off per year</label><input type="number" step="any" id="weeksOff" value="4"></div>
+<div class="field"><label for="hours">Hours worked per week</label><input type="number" step="any" id="hours" value="40"></div>
+<div class="field"><label for="billable">Percent of those hours you can bill</label><input type="number" step="any" id="billable" value="60"></div>
+<div class="field"><label for="currency">Currency</label><select id="currency"><option value="USD">USD — US dollar</option><option value="CAD">CAD — Canadian dollar</option><option value="EUR">EUR — Euro</option><option value="GBP">GBP — British pound</option><option value="AUD">AUD — Australian dollar</option><option value="NZD">NZD — NZ dollar</option><option value="INR">INR — Indian rupee</option><option value="ZAR">ZAR — South African rand</option></select></div>
+    </form>
+    <div class="readout">
+      <div class="big-label" id="out-label">Minimum hourly rate</div>
+      <div class="big" id="out-big">&mdash;</div>
+      <div class="rows" id="out-rows"></div>
+      <p class="explain">Figures are rounded to two decimals. Use them as a working
+      estimate and check anything that has to be exact against your own records.</p>
+    </div>
+  </div>
+
+  <article class="prose">
+  <h1>Freelance Hourly Rate Calculator</h1>
+  <p>Most freelancers pick a rate by guessing at what sounds reasonable. This goes the other way: start from the income you need, subtract the hours you cannot bill, and see the rate that actually gets you there.</p>
+  <h2>Frequently asked questions</h2>
+<details class="faq"><summary>What billable percentage is realistic?</summary><p>For most solo freelancers it lands between 50% and 70%. The rest goes to quoting, invoicing, email, marketing, and admin — real work that no client pays for directly.</p></details>
+<details class="faq"><summary>Should I include my own salary in expenses?</summary><p>No. Put what you want to take home in the income field and keep expenses for costs the business incurs: software, insurance, equipment, accounting, workspace.</p></details>
+<details class="faq"><summary>The number looks too high. Is it wrong?</summary><p>It is usually the first honest look at the arithmetic. If the rate is unsellable in your market, the lever is rarely the rate alone — raise the billable percentage, cut overhead, or move to project pricing where speed stops being a penalty.</p></details>
+  <h2>Keep reading</h2>
+  <p><a href="./guides/index.html">All guides</a> &middot; <a href="./invoice-generator.html">Free invoice generator</a> &middot; <a href="./guides/how-to-charge-late-fees.html">How to charge late fees</a> &middot; <a href="./guides/how-to-set-your-freelance-rate.html">Setting your rate</a></p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">
+  <div class="foot-links">
+    <a href="index.html">Home</a>
+    <a href="invoice-generator.html">Invoice Generator</a>
+    <a href="receipt-maker.html">Receipt Maker</a>
+    <a href="estimate-generator.html">Estimate Generator</a>
+    <a href="guides/index.html">Guides</a>
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+  </div>
+  <p class="legal">Paper Trail Forms provides free document tools and general business
+  information. It is not a law firm, an accounting firm, or a tax adviser, and
+  nothing on this site is legal, accounting, or tax advice &mdash; requirements
+  for invoices, receipts, late fees, and record retention vary by country and by
+  jurisdiction, so verify what applies to you before relying on it. The tools run
+  entirely in your browser: what you type is never transmitted to us and is
+  stored only in your own browser. &copy; 2026 Paper Trail Forms</p>
+</div></footer>
+</body>
+</html>
