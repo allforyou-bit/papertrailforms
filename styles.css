@@ -281,8 +281,16 @@ details.faq p { margin-top: 10px; color: var(--muted); font-size: .95rem; }
 .doc .doc-notes { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 12px; font-size: .85rem; color: var(--muted); white-space: pre-wrap; }
 .doc .paid-stamp { display: inline-block; border: 3px solid var(--green); color: var(--green); border-radius: 8px; padding: 4px 14px; font-weight: 800; letter-spacing: 2px; transform: rotate(-4deg); }
 
+/* ---------- job sheet / work order extras ---------- */
+.doc .sec-label { font-size: .72rem; font-weight: 800; letter-spacing: .8px; text-transform: uppercase; color: var(--navy-3); margin: 18px 0 6px; }
+.doc .sec-body { font-size: .88rem; line-height: 1.55; white-space: pre-wrap; border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; min-height: 44px; }
+.doc .doc-stamp { display: inline-block; border: 2px solid var(--navy-3); color: var(--navy-3); border-radius: 6px; padding: 3px 10px; font-size: .7rem; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; }
+.doc .sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 26px; margin-top: 26px; page-break-inside: avoid; }
+.doc .sig-line { border-top: 1px solid #1a2332; padding-top: 5px; font-size: .74rem; letter-spacing: .5px; text-transform: uppercase; color: var(--navy-3); margin-top: 34px; }
+
 @media print {
-  .site-header, .site-footer, .panel, .breadcrumb, .no-print, .prose { display: none !important; }
+  .site-header, .site-footer, .panel, .breadcrumb, .no-print, .prose,
+  .cta-box, [data-shop-listing] { display: none !important; }
   body { background: #fff; }
   .tool-layout { display: block; margin: 0; }
   .doc { border: none; box-shadow: none; border-radius: 0; padding: 0; font-size: 11pt; }

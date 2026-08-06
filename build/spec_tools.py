@@ -46,8 +46,74 @@ def _textarea(fid, label, placeholder="", note=""):
             % (fid, label, fid, placeholder, n))
 
 
+JOB_TYPE_OPTIONS = [
+    ("service", "Service call"), ("repair", "Repair"),
+    ("install", "Installation"), ("maintenance", "Scheduled maintenance"),
+    ("inspection", "Inspection / survey"), ("callback", "Callback / warranty"),
+]
+
+
+def job_sheet_form():
+    """Form for the job sheet / work order generator.
+
+    A work order is not an invoice: it records what was scheduled, who
+    attended, what was found, and what was used. Labour and parts are
+    kept as separate line-item tables because trades price them
+    differently and clients query them separately.
+    """
+    return "\n".join([
+        _input("from", "Your business name", placeholder="Halcyon Mechanical"),
+        _textarea("fromDetails", "Your address and contact",
+                  "12 Bishop Lane&#10;Halifax NS B3H 1A1&#10;"
+                  "902-555-0143"),
+        _input("to", "Customer name", placeholder="Brightline Cleaning Co."),
+        _textarea("toDetails", "Site address",
+                  "88 Water Street&#10;Dartmouth NS B2Y 4S1"),
+        _input("contact", "Site contact and phone",
+               placeholder="Dana Yeo · 902-555-0199"),
+        '<div class="row2">'
+        + _input("number", "Job number", placeholder="JOB-0001")
+        + _input("date", "Scheduled date", kind="date") + "</div>",
+        '<div class="row2">'
+        + _input("window", "Arrival window", placeholder="08:00 - 10:00")
+        + _input("technician", "Assigned to", placeholder="R. Okafor")
+        + "</div>",
+        _select("jobType", "Job type", JOB_TYPE_OPTIONS),
+        _textarea("requested", "Work requested",
+                  "No hot water on the second floor since Tuesday."),
+        _select("currency", "Currency", CURRENCY_OPTIONS),
+        '<div class="field"><label>Labour</label>'
+        '<div class="line-items" id="labour"></div>'
+        '<button type="button" class="btn-mini" id="add-labour">'
+        '+ Add labour line</button>'
+        '<div class="note">Quantity column is hours.</div></div>',
+        '<div class="field"><label>Parts and materials</label>'
+        '<div class="line-items" id="parts"></div>'
+        '<button type="button" class="btn-mini" id="add-part">'
+        '+ Add parts line</button></div>',
+        _input("callOut", "Call-out or trip fee", kind="number", step="any",
+               placeholder="0"),
+        '<div class="row2">'
+        + _input("taxLabel", "Tax label", placeholder="Sales tax / VAT / GST")
+        + _input("taxPct", "Tax %", kind="number", step="any",
+                 placeholder="0") + "</div>",
+        '<div class="row2">'
+        + _select("discountType", "Discount type",
+                  [("amount", "Fixed amount"), ("percent", "Percentage")])
+        + _input("discountValue", "Discount value", kind="number", step="any",
+                 placeholder="0") + "</div>",
+        _textarea("performed", "Work performed and findings",
+                  "Replaced thermostat, flushed tank, tested to 60C."),
+        _textarea("notes", "Notes / terms",
+                  "Parts carry a 12-month warranty. Signature confirms the "
+                  "work above was completed on site."),
+    ])
+
+
 def doc_form(kind):
-    """The shared form for invoice / receipt / estimate."""
+    """The shared form for invoice / receipt / estimate / job sheet."""
+    if kind == "job-sheet":
+        return job_sheet_form()
     is_invoice = kind == "invoice"
     is_receipt = kind == "receipt"
     noun = {"invoice": "Invoice", "receipt": "Receipt",
@@ -122,6 +188,15 @@ DOC_TOOLS = [
                  "no signup, no watermark, and no upload — everything happens "
                  "inside your own browser."),
         "keyword": "free invoice generator",
+        "cross_sell": {
+            "key": "invoice-trade",
+            "heading": "Working a trade rather than a desk?",
+            "body": ("We sell a fillable trade invoice template &mdash; the "
+                     "same layout, set up for handyman and contractor work, as "
+                     "a PDF you type into and reprint without opening a "
+                     "browser."),
+            "cta": "See the trade invoice template",
+        },
         "faq": [
             ("Is this invoice generator really free?",
              "Yes, and there is no account to create. The tool runs entirely in "
@@ -186,6 +261,15 @@ DOC_TOOLS = [
                  "work, set how long the price holds, and send it the same day "
                  "the client asks — speed wins more jobs than polish does."),
         "keyword": "free estimate generator",
+        "cross_sell": {
+            "key": "estimate-trade",
+            "heading": "Quoting trade work off a clipboard?",
+            "body": ("Our fillable trade estimate template covers the same "
+                     "ground as this tool in a printable PDF &mdash; useful "
+                     "when the quote gets written at the customer's kitchen "
+                     "table rather than back at the office."),
+            "cta": "See the trade estimate template",
+        },
         "faq": [
             ("Is an estimate legally binding?",
              "Generally an estimate is an offer rather than a contract, and it "
@@ -201,6 +285,64 @@ DOC_TOOLS = [
              "material costs have not moved — 14 to 30 days is the usual range. "
              "Set it in the “Valid for” field so it prints on the "
              "document."),
+        ],
+    },
+    {
+        "slug": "job-sheet-generator.html",
+        "tool": "job-sheet",
+        "title": "Free Job Sheet &amp; Work Order Generator for Trades",
+        "description": ("Free job sheet and work order generator for trades: "
+                        "scheduled visit, labour hours, parts used, findings, "
+                        "and a customer signature line. Prints straight to PDF."),
+        "h1": "Free Job Sheet &amp; Work Order Generator",
+        "lede": ("A job sheet is the record of what actually happened on site "
+                 "&mdash; who attended, what they found, what they used, and "
+                 "that the customer agreed it was done. Fill it in on the van "
+                 "or at the desk, then print it or save it as a PDF."),
+        "keyword": "job sheet generator",
+        "steps": [
+            "Fill in your details and the site address. They are remembered in "
+            "this browser for the next job.",
+            "Add the labour lines in hours, and the parts and materials "
+            "separately &mdash; clients query the two differently.",
+            "Write what was requested before the visit and what was found "
+            "during it. That pairing is what makes the sheet worth keeping.",
+            "Press <strong>Print / Save as PDF</strong>. The signature block "
+            "prints with it, ready to sign on site.",
+        ],
+        "cross_sell": {
+            "key": "job-sheet",
+            "heading": "Prefer a printable pad you can fill in on site?",
+            "body": ("Our Operations Kit is a fillable PDF set &mdash; job "
+                     "sheet, purchase order, and price list &mdash; that you "
+                     "type into once and reprint as often as you need, with no "
+                     "browser involved."),
+            "cta": "See the Operations Kit",
+        },
+        "faq": [
+            ("What is the difference between a job sheet and an invoice?",
+             "A job sheet records the work: who attended, what was found, what "
+             "was fitted, and how long it took. An invoice asks for money for "
+             "it. Most trades produce both &mdash; the sheet gets signed on "
+             "site, and the <a href=\"./invoice-generator.html\">invoice</a> "
+             "follows from what it says."),
+            ("Do the totals on a job sheet mean the customer owes that amount?",
+             "Not by itself. The figures show what the visit came to so nothing "
+             "is a surprise later, but the document is labelled as a record of "
+             "work rather than a request for payment. Send the invoice "
+             "separately once the sheet is signed."),
+            ("Why are labour and parts on separate tables?",
+             "Because they are usually priced on different logic &mdash; labour "
+             "by the hour, parts at cost plus a markup &mdash; and because a "
+             "customer querying a bill almost always queries one or the other. "
+             "Our <a href=\"./margin-markup-calculator.html\">margin and markup "
+             "calculator</a> works out the parts side."),
+            ("Does the customer signature make this a contract?",
+             "A signature on a job sheet is normally evidence that the work "
+             "described was carried out, not a new agreement about price. What "
+             "it is worth depends on your terms and your jurisdiction, so if "
+             "the sheet is doing contractual work for you, have your own terms "
+             "say so."),
         ],
     },
 ]

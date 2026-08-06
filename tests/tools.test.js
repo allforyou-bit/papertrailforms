@@ -172,5 +172,55 @@ t("earlyPayDiscount prices 2/10 net 30", () => {
   near(r.annualisedPct, 37.24, "annualised cost");
 });
 
+/* ---- job sheet totals ---- */
+t("jobTotals keeps labour and parts apart", () => {
+  const r = PT.jobTotals(
+    [{ hours: 2.5, rate: 80 }, { hours: 1, rate: 80 }],
+    [{ qty: 2, rate: 45.5 }],
+    {});
+  assert.strictEqual(r.hours, 3.5);
+  assert.strictEqual(r.labour, 280);
+  assert.strictEqual(r.parts, 91);
+  assert.strictEqual(r.subtotal, 371);
+  assert.strictEqual(r.total, 371);
+});
+t("jobTotals adds the call-out before the discount", () => {
+  const r = PT.jobTotals([{ hours: 1, rate: 100 }], [], {
+    callOut: 50, discount: { type: "percent", value: 10 }
+  });
+  assert.strictEqual(r.subtotal, 150);
+  /* 10% of 150, not 10% of 100 — the discount covers the whole visit */
+  assert.strictEqual(r.discount, 15);
+  assert.strictEqual(r.total, 135);
+});
+t("jobTotals taxes the discounted amount only", () => {
+  const r = PT.jobTotals([{ hours: 4, rate: 75 }], [{ qty: 1, rate: 200 }], {
+    taxPct: 15, discount: { type: "amount", value: 100 }
+  });
+  assert.strictEqual(r.subtotal, 500);
+  assert.strictEqual(r.taxable, 400);
+  assert.strictEqual(r.tax, 60);
+  assert.strictEqual(r.total, 460);
+});
+t("jobTotals never lets a discount go past the subtotal", () => {
+  const r = PT.jobTotals([{ hours: 1, rate: 50 }], [], {
+    discount: { type: "amount", value: 999 }
+  });
+  assert.strictEqual(r.discount, 50);
+  assert.strictEqual(r.total, 0);
+});
+t("jobTotals survives empty and junk input", () => {
+  const r = PT.jobTotals(null, undefined, null);
+  assert.strictEqual(r.total, 0);
+  assert.strictEqual(r.hours, 0);
+  const j = PT.jobTotals([{ hours: "two", rate: "abc" }], [{ qty: "", rate: "" }], {});
+  assert.strictEqual(j.total, 0);
+});
+t("jobTotals handles fractional hours without float drift", () => {
+  const r = PT.jobTotals([{ hours: 0.1, rate: 0.2 }, { hours: 1.15, rate: 100 }], [], {});
+  assert.strictEqual(r.labour, 115.02);
+  assert.strictEqual(r.hours, 1.25);
+});
+
 if (!process.exitCode) console.log(`tools.js: ${passed} assertions passed`);
 else console.error("tools.js unit tests FAILED");

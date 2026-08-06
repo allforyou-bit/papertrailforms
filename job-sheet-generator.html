@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Job Sheet &amp; Work Order Generator for Trades</title>
+<meta name="description" content="Free job sheet and work order generator for trades: scheduled visit, labour hours, parts used, findings, and a customer signature line. Prints straight to PDF.">
+<link rel="canonical" href="https://papertrailforms.com/job-sheet-generator.html">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128441;</text></svg>">
+<link rel="stylesheet" href="styles.css">
+<script src="config.js" defer></script>
+<script src="tools.js" defer></script>
+</head>
+<body data-tool="job-sheet">
+<header class="site-header"><nav class="nav container">
+  <a class="brand" href="index.html">&#128441; Paper Trail <span style="opacity:.75">Forms</span></a>
+  <div class="nav-links">
+    <a href="invoice-generator.html">Invoice</a>
+    <a href="receipt-maker.html">Receipt</a>
+    <a href="estimate-generator.html">Estimate</a>
+    <a href="job-sheet-generator.html">Job Sheet</a>
+    <a href="index.html#calculators">Calculators</a>
+    <a href="guides/index.html">Guides</a>
+    <a class="btn-cta" data-shop-link href="#">Printable Forms</a>
+  </div>
+</nav></header>
+<main class="container">
+  <p class="breadcrumb"><a href="./index.html">Home</a> &rsaquo; Free Job Sheet &amp; Work Order Generator</p>
+  <div class="tool-layout">
+    <form class="panel" id="tool-form" onsubmit="return false;">
+      <h2>Fill this in</h2>
+      <p class="hint">Everything updates as you type. Nothing leaves your browser.</p>
+      <div class="field"><label for="from">Your business name</label><input type="text" id="from" placeholder="Halcyon Mechanical"></div>
+<div class="field"><label for="fromDetails">Your address and contact</label><textarea id="fromDetails" placeholder="12 Bishop Lane&#10;Halifax NS B3H 1A1&#10;902-555-0143"></textarea></div>
+<div class="field"><label for="to">Customer name</label><input type="text" id="to" placeholder="Brightline Cleaning Co."></div>
+<div class="field"><label for="toDetails">Site address</label><textarea id="toDetails" placeholder="88 Water Street&#10;Dartmouth NS B2Y 4S1"></textarea></div>
+<div class="field"><label for="contact">Site contact and phone</label><input type="text" id="contact" placeholder="Dana Yeo · 902-555-0199"></div>
+<div class="row2"><div class="field"><label for="number">Job number</label><input type="text" id="number" placeholder="JOB-0001"></div><div class="field"><label for="date">Scheduled date</label><input type="date" id="date" placeholder=""></div></div>
+<div class="row2"><div class="field"><label for="window">Arrival window</label><input type="text" id="window" placeholder="08:00 - 10:00"></div><div class="field"><label for="technician">Assigned to</label><input type="text" id="technician" placeholder="R. Okafor"></div></div>
+<div class="field"><label for="jobType">Job type</label><select id="jobType"><option value="service">Service call</option><option value="repair">Repair</option><option value="install">Installation</option><option value="maintenance">Scheduled maintenance</option><option value="inspection">Inspection / survey</option><option value="callback">Callback / warranty</option></select></div>
+<div class="field"><label for="requested">Work requested</label><textarea id="requested" placeholder="No hot water on the second floor since Tuesday."></textarea></div>
+<div class="field"><label for="currency">Currency</label><select id="currency"><option value="USD">USD — US dollar</option><option value="CAD">CAD — Canadian dollar</option><option value="EUR">EUR — Euro</option><option value="GBP">GBP — British pound</option><option value="AUD">AUD — Australian dollar</option><option value="NZD">NZD — NZ dollar</option><option value="INR">INR — Indian rupee</option><option value="ZAR">ZAR — South African rand</option></select></div>
+<div class="field"><label>Labour</label><div class="line-items" id="labour"></div><button type="button" class="btn-mini" id="add-labour">+ Add labour line</button><div class="note">Quantity column is hours.</div></div>
+<div class="field"><label>Parts and materials</label><div class="line-items" id="parts"></div><button type="button" class="btn-mini" id="add-part">+ Add parts line</button></div>
+<div class="field"><label for="callOut">Call-out or trip fee</label><input type="number" id="callOut" placeholder="0" step="any"></div>
+<div class="row2"><div class="field"><label for="taxLabel">Tax label</label><input type="text" id="taxLabel" placeholder="Sales tax / VAT / GST"></div><div class="field"><label for="taxPct">Tax %</label><input type="number" id="taxPct" placeholder="0" step="any"></div></div>
+<div class="row2"><div class="field"><label for="discountType">Discount type</label><select id="discountType"><option value="amount">Fixed amount</option><option value="percent">Percentage</option></select></div><div class="field"><label for="discountValue">Discount value</label><input type="number" id="discountValue" placeholder="0" step="any"></div></div>
+<div class="field"><label for="performed">Work performed and findings</label><textarea id="performed" placeholder="Replaced thermostat, flushed tank, tested to 60C."></textarea></div>
+<div class="field"><label for="notes">Notes / terms</label><textarea id="notes" placeholder="Parts carry a 12-month warranty. Signature confirms the work above was completed on site."></textarea></div>
+      <div class="tool-actions">
+        <button type="button" class="btn btn-primary" id="print-doc">Print / Save as PDF</button>
+        <button type="button" class="btn-mini" id="reset-doc">Start over</button>
+      </div>
+    </form>
+    <div>
+      <div class="doc" id="doc"></div>
+      <p class="hint no-print" style="margin-top:10px">Tip: choose &ldquo;Save as PDF&rdquo;
+      as the destination in the print dialog. Only the document prints &mdash; not this page.</p>
+    </div>
+  </div>
+
+  <article class="prose">
+  <h1>Free Job Sheet &amp; Work Order Generator</h1>
+  <p>A job sheet is the record of what actually happened on site &mdash; who attended, what they found, what they used, and that the customer agreed it was done. Fill it in on the van or at the desk, then print it or save it as a PDF.</p>
+  <h2>How it works</h2>
+  <ol class="steps">
+  <li>Fill in your details and the site address. They are remembered in this browser for the next job.</li>
+  <li>Add the labour lines in hours, and the parts and materials separately &mdash; clients query the two differently.</li>
+  <li>Write what was requested before the visit and what was found during it. That pairing is what makes the sheet worth keeping.</li>
+  <li>Press <strong>Print / Save as PDF</strong>. The signature block prints with it, ready to sign on site.</li>
+  </ol>
+  <div class="notice"><strong>Your data stays yours.</strong> This tool makes no
+  network requests. What you type is held in your browser's local storage on your
+  own machine, so closing the tab does not lose it &mdash; and clearing your browser
+  data removes it entirely.</div>
+  <h2>Frequently asked questions</h2>
+<details class="faq"><summary>What is the difference between a job sheet and an invoice?</summary><p>A job sheet records the work: who attended, what was found, what was fitted, and how long it took. An invoice asks for money for it. Most trades produce both &mdash; the sheet gets signed on site, and the <a href="./invoice-generator.html">invoice</a> follows from what it says.</p></details>
+<details class="faq"><summary>Do the totals on a job sheet mean the customer owes that amount?</summary><p>Not by itself. The figures show what the visit came to so nothing is a surprise later, but the document is labelled as a record of work rather than a request for payment. Send the invoice separately once the sheet is signed.</p></details>
+<details class="faq"><summary>Why are labour and parts on separate tables?</summary><p>Because they are usually priced on different logic &mdash; labour by the hour, parts at cost plus a markup &mdash; and because a customer querying a bill almost always queries one or the other. Our <a href="./margin-markup-calculator.html">margin and markup calculator</a> works out the parts side.</p></details>
+<details class="faq"><summary>Does the customer signature make this a contract?</summary><p>A signature on a job sheet is normally evidence that the work described was carried out, not a new agreement about price. What it is worth depends on your terms and your jurisdiction, so if the sheet is doing contractual work for you, have your own terms say so.</p></details>
+  <h2>Keep reading</h2>
+  <p><a href="./guides/index.html">All guides</a> &middot; <a href="./guides/deposits-and-progress-payments.html">Deposits and progress payments</a> &middot; <a href="./invoice-generator.html">Free invoice generator</a> &middot; <a href="./guides/how-to-charge-late-fees.html">How to charge late fees</a></p>
+  </article>
+  <aside class="cta-box" data-shop-listing="job-sheet" hidden><h3>Prefer a printable pad you can fill in on site?</h3><p>Our Operations Kit is a fillable PDF set &mdash; job sheet, purchase order, and price list &mdash; that you type into once and reprint as often as you need, with no browser involved.</p><a class="btn btn-primary" data-shop-listing-link="job-sheet" href="#" rel="nofollow">See the Operations Kit</a></aside>
+</main>
+<footer class="site-footer"><div class="container">
+  <div class="foot-links">
+    <a href="index.html">Home</a>
+    <a href="invoice-generator.html">Invoice Generator</a>
+    <a href="receipt-maker.html">Receipt Maker</a>
+    <a href="estimate-generator.html">Estimate Generator</a>
+    <a href="job-sheet-generator.html">Job Sheet Generator</a>
+    <a href="guides/index.html">Guides</a>
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+  </div>
+  <p class="legal">Paper Trail Forms provides free document tools and general business
+  information. It is not a law firm, an accounting firm, or a tax adviser, and
+  nothing on this site is legal, accounting, or tax advice &mdash; requirements
+  for invoices, receipts, late fees, and record retention vary by country and by
+  jurisdiction, so verify what applies to you before relying on it. The tools run
+  entirely in your browser: what you type is never transmitted to us and is
+  stored only in your own browser. &copy; 2026 Paper Trail Forms</p>
+</div></footer>
+</body>
+</html>

@@ -23,7 +23,7 @@ from spec_guides import GUIDES  # noqa: E402
 # day it is approved, nothing but config.js and this line need to change.
 SITE_URL = "https://papertrailforms.com"
 BRAND = "Paper Trail Forms"
-TODAY = "2026-07-30"
+TODAY = "2026-08-06"
 
 FAVICON = ("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' "
            "viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128441;</text></svg>")
@@ -38,6 +38,7 @@ def nav(depth):
     <a href="{u}invoice-generator.html">Invoice</a>
     <a href="{u}receipt-maker.html">Receipt</a>
     <a href="{u}estimate-generator.html">Estimate</a>
+    <a href="{u}job-sheet-generator.html">Job Sheet</a>
     <a href="{u}index.html#calculators">Calculators</a>
     <a href="{u}guides/index.html">Guides</a>
     <a class="btn-cta" data-shop-link href="#">Printable Forms</a>
@@ -53,6 +54,7 @@ def footer(depth):
     <a href="{u}invoice-generator.html">Invoice Generator</a>
     <a href="{u}receipt-maker.html">Receipt Maker</a>
     <a href="{u}estimate-generator.html">Estimate Generator</a>
+    <a href="{u}job-sheet-generator.html">Job Sheet Generator</a>
     <a href="{u}guides/index.html">Guides</a>
     <a href="{u}about.html">About</a>
     <a href="{u}privacy.html">Privacy</a>
@@ -109,6 +111,37 @@ def faq_block(items):
 
 # ---------------------------------------------------------------- tools
 
+DEFAULT_DOC_STEPS = [
+    "Fill in your details and the client's. They are remembered in this "
+    "browser for next time.",
+    "Add a line for each item or task, with a quantity and a rate.",
+    "Set tax, any discount, and the terms. The totals recalculate as you type.",
+    "Press <strong>Print / Save as PDF</strong> and choose Save as PDF.",
+]
+
+
+def steps_block(t):
+    items = t.get("steps") or DEFAULT_DOC_STEPS
+    return "\n".join("  <li>%s</li>" % s for s in items)
+
+
+def cross_sell_block(t):
+    """A curated shop link, gated on config so it can never break.
+
+    The href is a placeholder in the committed HTML; config.js fills it in
+    at runtime from SITE_CONFIG.shopListings and hides the whole block when
+    the key is not configured. That keeps third-party URLs out of the static
+    pages, which is what qc_site.py check 5 enforces.
+    """
+    cs = t.get("cross_sell")
+    if not cs:
+        return ""
+    return ('<aside class="cta-box" data-shop-listing="{key}" hidden>'
+            '<h3>{heading}</h3><p>{body}</p>'
+            '<a class="btn btn-primary" data-shop-listing-link="{key}" '
+            'href="#" rel="nofollow">{cta}</a></aside>').format(**cs)
+
+
 def render_doc_tool(t):
     body = """<main class="container">
   <p class="breadcrumb"><a href="./index.html">Home</a> &rsaquo; {h1}</p>
@@ -134,10 +167,7 @@ def render_doc_tool(t):
   <p>{lede}</p>
   <h2>How it works</h2>
   <ol class="steps">
-  <li>Fill in your details and the client's. They are remembered in this browser for next time.</li>
-  <li>Add a line for each item or task, with a quantity and a rate.</li>
-  <li>Set tax, any discount, and the terms. The totals recalculate as you type.</li>
-  <li>Press <strong>Print / Save as PDF</strong> and choose Save as PDF.</li>
+{steps}
   </ol>
   <div class="notice"><strong>Your data stays yours.</strong> This tool makes no
   network requests. What you type is held in your browser's local storage on your
@@ -147,15 +177,22 @@ def render_doc_tool(t):
   <h2>Keep reading</h2>
   <p>{related}</p>
   </article>
+  {cross_sell}
 </main>"""
     related = ('<a href="./guides/index.html">All guides</a> &middot; '
                '<a href="./guides/what-to-include-on-an-invoice.html">What to include on an invoice</a> &middot; '
                '<a href="./guides/invoice-vs-receipt-vs-estimate.html">Invoice vs receipt vs estimate</a> &middot; '
                '<a href="./guides/net-30-payment-terms-explained.html">Net 30 explained</a>')
+    if t["tool"] == "job-sheet":
+        related = ('<a href="./guides/index.html">All guides</a> &middot; '
+                   '<a href="./guides/deposits-and-progress-payments.html">Deposits and progress payments</a> &middot; '
+                   '<a href="./invoice-generator.html">Free invoice generator</a> &middot; '
+                   '<a href="./guides/how-to-charge-late-fees.html">How to charge late fees</a>')
     return page(t["slug"], t["title"], t["description"],
                 body.format(h1=t["h1"], form=doc_form(t["tool"]),
                             lede=t["lede"], faq=faq_block(t["faq"]),
-                            related=related),
+                            steps=steps_block(t), related=related,
+                            cross_sell=cross_sell_block(t)),
                 depth=0, tool=t["tool"])
 
 
@@ -497,6 +534,7 @@ def render_404():
     <li><a href="/invoice-generator.html">Free invoice generator</a></li>
     <li><a href="/receipt-maker.html">Free receipt maker</a></li>
     <li><a href="/estimate-generator.html">Free estimate generator</a></li>
+    <li><a href="/job-sheet-generator.html">Free job sheet and work order generator</a></li>
     <li><a href="/late-fee-calculator.html">Late payment fee calculator</a></li>
     <li><a href="/sales-tax-calculator.html">Sales tax calculator</a></li>
     <li><a href="/hourly-rate-calculator.html">Freelance hourly rate calculator</a></li>

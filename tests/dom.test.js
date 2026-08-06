@@ -108,6 +108,98 @@ t("receipt maker stamps PAID and shows no due date", () => {
   assert.ok(!doc.textContent.includes("Total due"), "a receipt does not ask for money");
 });
 
+/* ---------------- job sheet generator ---------------- */
+t("job sheet renders labour and parts as separate tables", () => {
+  const w = load("job-sheet-generator.html");
+  const labour = w.document.querySelectorAll("#labour .li-row");
+  const parts = w.document.querySelectorAll("#parts .li-row");
+  assert.ok(labour.length >= 2, "starts with blank labour rows");
+  assert.ok(parts.length >= 2, "starts with blank parts rows");
+
+  set(w, "from", "Halcyon Mechanical");
+  set(w, "to", "Brightline Cleaning Co.");
+  set(w, "technician", "R. Okafor");
+  set(w, "jobType", "repair");
+  set(w, "requested", "No hot water on the second floor.");
+  set(w, "performed", "Replaced thermostat.");
+
+  const l0 = labour[0];
+  l0.querySelector(".li-desc").value = "Diagnose and replace thermostat";
+  l0.querySelector(".li-qty").value = "2.5";
+  l0.querySelector(".li-rate").value = "80";
+  l0.querySelector(".li-rate").dispatchEvent(new w.Event("input", { bubbles: true }));
+
+  const p0 = parts[0];
+  p0.querySelector(".li-desc").value = "Thermostat unit";
+  p0.querySelector(".li-qty").value = "1";
+  p0.querySelector(".li-rate").value = "91";
+  p0.querySelector(".li-rate").dispatchEvent(new w.Event("input", { bubbles: true }));
+
+  const doc = w.document.getElementById("doc").textContent;
+  assert.ok(doc.includes("Work Order"), "titled as a work order");
+  assert.ok(doc.includes("R. Okafor"), "technician shows");
+  assert.ok(doc.includes("Repair"), "job type label shows");
+  assert.ok(doc.includes("No hot water"), "work requested shows");
+  assert.ok(doc.includes("Replaced thermostat"), "work performed shows");
+  assert.ok(doc.includes("$200.00"), "labour 2.5h x 80 shows");
+  assert.ok(doc.includes("$91.00"), "parts total shows");
+  assert.ok(doc.includes("$291.00"), "job value shows");
+  assert.ok(doc.includes("2.50 h"), "hours are totalled");
+});
+
+t("job sheet is labelled a record of work, not a bill", () => {
+  const w = load("job-sheet-generator.html");
+  const doc = w.document.getElementById("doc").textContent;
+  assert.ok(doc.includes("not an invoice"), "the disclaimer stamp is present");
+  assert.ok(!doc.includes("Total due"), "a job sheet does not ask for money");
+  assert.ok(doc.includes("Customer signature"), "signature block prints with it");
+});
+
+t("job sheet persists to its own localStorage key", () => {
+  const w = load("job-sheet-generator.html");
+  set(w, "technician", "S. Duarte");
+  const saved = JSON.parse(w.localStorage.getItem("pt-job-sheet"));
+  assert.strictEqual(saved.technician, "S. Duarte");
+  assert.strictEqual(w.localStorage.getItem("pt-invoice"), null,
+                     "it does not overwrite the invoice's saved state");
+});
+
+t("adding a parts line does not add a labour line", () => {
+  const w = load("job-sheet-generator.html");
+  const labourBefore = w.document.querySelectorAll("#labour .li-row").length;
+  const partsBefore = w.document.querySelectorAll("#parts .li-row").length;
+  w.document.getElementById("add-part").dispatchEvent(
+    new w.Event("click", { bubbles: true }));
+  assert.strictEqual(
+    w.document.querySelectorAll("#parts .li-row").length, partsBefore + 1);
+  assert.strictEqual(
+    w.document.querySelectorAll("#labour .li-row").length, labourBefore);
+});
+
+/* ---------------- curated shop cross-links ---------------- */
+t("cross-sell blocks are wired from config and hidden without a url", () => {
+  const w = load("job-sheet-generator.html");
+  const block = w.document.querySelector('[data-shop-listing="job-sheet"]');
+  assert.ok(block, "the cross-sell block exists in the markup");
+  const url = (w.SITE_CONFIG.shopListings || {})["job-sheet"];
+  if (url) {
+    assert.strictEqual(block.hidden, false, "shown once a url is configured");
+    assert.strictEqual(
+      block.querySelector("[data-shop-listing-link]").getAttribute("href"), url);
+  } else {
+    assert.strictEqual(block.hidden, true, "no url means no dead link");
+  }
+});
+
+t("an unconfigured cross-sell key stays hidden", () => {
+  const w = load("invoice-generator.html");
+  const block = w.document.querySelector("[data-shop-listing]");
+  assert.ok(block, "invoice page carries a cross-sell block");
+  block.setAttribute("data-shop-listing", "not-a-real-key");
+  w.document.dispatchEvent(new w.Event("DOMContentLoaded"));
+  assert.strictEqual(block.hidden, true, "unknown key hides the whole block");
+});
+
 /* ---------------- calculators ---------------- */
 t("late fee calculator shows the fee and the new balance", () => {
   const w = load("late-fee-calculator.html");

@@ -763,4 +763,143 @@ GUIDES = [
              "doubt, keep it."),
         ],
     },
+    {
+        "slug": "deposits-and-progress-payments.html",
+        "title": "Deposits and Progress Payments for Trade Jobs",
+        "description": ("How much deposit to ask for, when to bill the stages "
+                        "of a job, and how to structure payments so a long "
+                        "trade job never funds itself out of your own pocket."),
+        "h1": "Deposits and Progress Payments for Trade Jobs",
+        "meta": "Getting paid",
+        "body": """
+  <p>A long job has a cash-flow shape that a short one does not. You buy the
+  materials in week one, pay the labour every week after that, and if the whole
+  invoice waits until the last screw goes in, you have financed the customer's
+  project out of your own account for a month. Deposits and progress payments
+  are how that gets fixed &mdash; not by charging more, but by charging in step
+  with what you have already spent.</p>
+
+  <h2>What a deposit is actually for</h2>
+
+  <p>Two things, and it is worth being clear which one you are asking for
+  because they justify different amounts.</p>
+
+  <p>The first is <strong>materials cover</strong>. If a job needs $3,000 of
+  fittings before anyone turns a spanner, a deposit that covers those fittings
+  is not a favour you are asking for &mdash; it is the customer paying for their
+  own materials at the moment they are bought. This is the easiest deposit to
+  justify, because you can show the supplier quote.</p>
+
+  <p>The second is <strong>commitment</strong>. A booked week that cancels on
+  the Friday before is a week you cannot resell. A modest deposit makes the
+  booking real. This one is harder to push high, and it is the reason a
+  &ldquo;50% up front&rdquo; on a labour-only job meets more resistance than the
+  same figure on a job that is mostly parts.</p>
+
+  <h2>How much to ask for</h2>
+
+  <p>There is no universal number, and anyone who gives you one is describing
+  their own trade. What holds across trades is the logic:</p>
+
+  <ul class="checklist">
+  <li><strong>Cover the materials, at minimum.</strong> If you would be out of
+  pocket on day one, the deposit is too small.</li>
+  <li><strong>Scale with the job length.</strong> A same-day call rarely needs a
+  deposit at all. A three-week install almost always does.</li>
+  <li><strong>Scale with the customer's exposure, not just yours.</strong> A
+  first-time residential customer handing over a large sum to a stranger is
+  taking a real risk. Smaller deposit, more frequent stages, and the trust gets
+  built by the schedule rather than argued about up front.</li>
+  <li><strong>Watch the consumer rules.</strong> Several jurisdictions cap
+  deposits on home-improvement contracts, require deposits to be held in a
+  particular way, or give a cooling-off period during which the customer can
+  cancel. Check what applies where you work before you set a house rule.</li>
+  </ul>
+
+  <div class="notice">Deposit limits, cooling-off rights, and the rules on
+  holding customer money vary by country and by jurisdiction, and they are
+  stricter for residential work than for commercial. Verify your local position
+  &mdash; nothing here is legal advice.</div>
+
+  <h2>Structuring progress payments</h2>
+
+  <p>The mistake is to split by time (&ldquo;a third a week&rdquo;), because
+  time keeps passing whether or not the work does, and a delayed job turns your
+  payment schedule into an argument. Split by <strong>milestone</strong>
+  instead: a stage is billable when something verifiable has happened.</p>
+
+  <p>A workable shape for a two-to-four week job:</p>
+
+  <table>
+  <thead>
+  <tr><th>Stage</th><th>Trigger</th><th>Rough share</th></tr>
+  </thead>
+  <tbody>
+  <tr><td>Deposit</td><td>Booking confirmed, materials ordered</td><td>Materials cost + a little</td></tr>
+  <tr><td>Stage 1</td><td>First fix complete and signed off</td><td>A third of the balance</td></tr>
+  <tr><td>Stage 2</td><td>Second fix complete and signed off</td><td>A third of the balance</td></tr>
+  <tr><td>Final</td><td>Snagging done, job handed over</td><td>The remainder</td></tr>
+  </tbody>
+  </table>
+
+  <p>Two details make this hold up. First, each trigger has to be something the
+  customer can see &mdash; &ldquo;first fix complete&rdquo; is checkable,
+  &ldquo;60% done&rdquo; is not. Second, sign-off should leave a record. A
+  <a href="../job-sheet-generator.html">job sheet</a> signed at the end of each
+  stage turns &ldquo;is stage two finished?&rdquo; from an opinion into a
+  document.</p>
+
+  <h2>Keep the final payment worth having</h2>
+
+  <p>The last stage is the one that gets disputed, because by then the customer
+  has what they wanted and their leverage is at its highest. Two habits help.</p>
+
+  <p>Leave enough on the final invoice to be worth finishing for. If the closing
+  payment is 5% of the job, snagging quietly drops down your priority list, and
+  the customer notices. Ten to twenty percent keeps both sides motivated.</p>
+
+  <p>Invoice each stage the day it completes, not at the end. A stage invoice
+  sent three weeks late reads as an afterthought and gets treated like one. Our
+  <a href="../invoice-generator.html">invoice generator</a> takes about a minute
+  once your details are saved, and the
+  <a href="../payment-terms-calculator.html">due date calculator</a> puts a real
+  date on the document instead of &ldquo;net 30.&rdquo;</p>
+
+  <h2>Put it in writing before you start</h2>
+
+  <p>Every part of this belongs in the estimate the customer accepts, not in a
+  conversation on site. The deposit amount, what each stage means, what each
+  stage costs, and what happens if the job stalls for a reason outside your
+  control. An <a href="../estimate-generator.html">estimate</a> that spells out
+  the payment schedule is doing two jobs: winning the work, and pre-agreeing the
+  thing most likely to go wrong later.</p>
+
+  <p>If a stage payment does go unpaid, stop before the next stage rather than
+  working through it and hoping. Continuing is how a $2,000 problem becomes a
+  $9,000 one, and it weakens your position rather than strengthening it. Our
+  guide on <a href="./how-to-charge-late-fees.html">charging late fees</a> covers
+  what you can add once a payment is genuinely overdue.</p>
+""",
+        "faq": [
+            ("Is it normal to ask for a deposit?",
+             "In the trades, yes, particularly on any job with material costs "
+             "up front or more than a day of labour. What varies is the size "
+             "and the wording, not whether it is reasonable to ask."),
+            ("What if the customer refuses a deposit?",
+             "Ask what would make them comfortable. Often the objection is to "
+             "the size or to paying a stranger, not to the principle — a "
+             "smaller deposit with more frequent, smaller stages solves it. If "
+             "nothing works and the job needs real money up front, that is "
+             "useful information about the job."),
+            ("Can I charge a late fee on an unpaid stage payment?",
+             "Only if your terms said so before the work started, and only "
+             "within whatever your jurisdiction allows. A fee that appears for "
+             "the first time on an overdue stage invoice is easy to dispute."),
+            ("Do progress payments need separate invoices?",
+             "Yes. Each stage should be its own numbered invoice with its own "
+             "date and due date, showing what stage it covers and what remains. "
+             "A running total on one document gets confusing for both sides at "
+             "tax time."),
+        ],
+    },
 ]

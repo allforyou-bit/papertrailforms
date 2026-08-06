@@ -84,6 +84,55 @@
   }
 
   /**
+   * Job sheet / work order totals.
+   * Labour and parts are kept apart all the way through because trades
+   * price them on different logic and clients query them separately.
+   * labour : [{description, hours, rate}]
+   * parts  : [{description, qty, rate}]
+   * opts   : {callOut, taxPct, discount: {type, value}}
+   * The call-out fee joins the subtotal BEFORE the discount, so a
+   * "10% off this visit" really does come off the whole visit.
+   */
+  function jobTotals(labour, parts, opts) {
+    opts = opts || {};
+    var hours = 0, labourTotal = 0, partsTotal = 0;
+    (labour || []).forEach(function (l) {
+      hours += num(l.hours);
+      labourTotal += num(l.hours) * num(l.rate);
+    });
+    (parts || []).forEach(function (p) {
+      partsTotal += num(p.qty) * num(p.rate);
+    });
+    labourTotal = round2(labourTotal);
+    partsTotal = round2(partsTotal);
+    var callOut = round2(num(opts.callOut));
+    var subtotal = round2(labourTotal + partsTotal + callOut);
+
+    var d = opts.discount || {};
+    var discountAmt = 0;
+    if (d.value) {
+      discountAmt = d.type === "percent"
+        ? subtotal * (num(d.value) / 100)
+        : num(d.value);
+    }
+    discountAmt = round2(Math.min(Math.max(discountAmt, 0), subtotal));
+
+    var taxable = round2(subtotal - discountAmt);
+    var tax = round2(taxable * (num(opts.taxPct) / 100));
+    return {
+      hours: round2(hours),
+      labour: labourTotal,
+      parts: partsTotal,
+      callOut: callOut,
+      subtotal: subtotal,
+      discount: discountAmt,
+      taxable: taxable,
+      tax: tax,
+      total: round2(taxable + tax)
+    };
+  }
+
+  /**
    * Sales tax, both directions.
    * mode "add"    : amount is pre-tax, return the tax and the gross
    * mode "remove" : amount already includes tax, back it out
@@ -245,7 +294,8 @@
   var api = {
     CURRENCIES: CURRENCIES,
     round2: round2, money: money, num: num,
-    docTotals: docTotals, salesTax: salesTax, lateFee: lateFee,
+    docTotals: docTotals, jobTotals: jobTotals,
+    salesTax: salesTax, lateFee: lateFee,
     hourlyRate: hourlyRate, marginMarkup: marginMarkup,
     dueDate: dueDate, earlyPayDiscount: earlyPayDiscount,
     parseDate: parseDate, fmtDate: fmtDate
@@ -275,36 +325,47 @@
     receipt: { title: "Receipt", numLabel: "Receipt #", dateLabel: "Date paid", prefix: "REC-" }
   };
 
-  function addItemRow(values) {
-    var wrap = $("#items");
+  /* Line-item rows are shared by every document tool. The invoice family
+     uses one table (#items); the job sheet uses two (#labour, #parts), so
+     the container id and the quantity wording are parameters rather than
+     constants. */
+  function addItemRow(values, wrapId, opts) {
+    wrapId = wrapId || "items";
+    opts = opts || {};
+    var wrap = document.getElementById(wrapId);
     if (!wrap) return;
+    var qtyLabel = opts.qtyLabel || "Qty";
+    var descHint = opts.descHint || "Description of work or item";
+    var render = opts.render || renderDoc;
     var row = document.createElement("div");
     row.className = "li-row";
     row.innerHTML =
-      '<input type="text" class="li-desc" placeholder="Description of work or item" aria-label="Description">' +
-      '<input type="number" class="li-qty" placeholder="Qty" step="any" min="0" aria-label="Quantity">' +
+      '<input type="text" class="li-desc" placeholder="' + descHint + '" aria-label="Description">' +
+      '<input type="number" class="li-qty" placeholder="' + qtyLabel + '" step="any" min="0" aria-label="' + qtyLabel + '">' +
       '<input type="number" class="li-rate" placeholder="Rate" step="any" min="0" aria-label="Rate">' +
       '<button type="button" class="btn-mini danger li-del" aria-label="Remove line">&times;</button>';
     wrap.appendChild(row);
     var v = values || {};
     $(".li-desc", row).value = v.description || "";
-    $(".li-qty", row).value = v.qty == null ? "1" : v.qty;
+    $(".li-qty", row).value = v.qty == null ? (v.hours == null ? "1" : v.hours) : v.qty;
     $(".li-rate", row).value = v.rate == null ? "" : v.rate;
     $(".li-del", row).addEventListener("click", function () {
       row.parentNode.removeChild(row);
-      if (!$$("#items .li-row").length) addItemRow();
-      renderDoc();
+      if (!$$("#" + wrapId + " .li-row").length) addItemRow(null, wrapId, opts);
+      render();
     });
     $$("input", row).forEach(function (inp) {
-      inp.addEventListener("input", renderDoc);
+      inp.addEventListener("input", render);
     });
   }
 
-  function readItems() {
-    return $$("#items .li-row").map(function (row) {
+  function readItems(wrapId) {
+    return $$("#" + (wrapId || "items") + " .li-row").map(function (row) {
+      var qty = $(".li-qty", row).value;
       return {
         description: $(".li-desc", row).value,
-        qty: $(".li-qty", row).value,
+        qty: qty,
+        hours: qty,
         rate: $(".li-rate", row).value
       };
     });
@@ -434,6 +495,177 @@
     renderDoc();
   }
 
+  /* ---------- job sheet / work order ---------- */
+
+  var JOB_TYPES = {
+    service: "Service call", repair: "Repair", install: "Installation",
+    maintenance: "Scheduled maintenance", inspection: "Inspection / survey",
+    callback: "Callback / warranty"
+  };
+  var JOB_FIELDS = ["from", "fromDetails", "to", "toDetails", "contact",
+                    "number", "date", "window", "technician", "jobType",
+                    "requested", "currency", "callOut", "taxLabel", "taxPct",
+                    "discountType", "discountValue", "performed", "notes"];
+  var LABOUR_OPTS = { qtyLabel: "Hours", descHint: "Labour — what was done",
+                      render: renderJob };
+  var PARTS_OPTS = { qtyLabel: "Qty", descHint: "Part or material",
+                     render: renderJob };
+
+  function jobState() {
+    var s = { kind: "job-sheet",
+              labour: readItems("labour"), parts: readItems("parts") };
+    JOB_FIELDS.forEach(function (k) { s[k] = val(k); });
+    return s;
+  }
+
+  /* A row the user has not touched still carries the default quantity of
+     1, so quantity alone cannot mean "this line is real" — otherwise two
+     blank labour rows would silently add two hours to the total. Same
+     test the invoice table uses. */
+  function usedRow(it) {
+    return Boolean(String(it.description).trim() || num(it.rate));
+  }
+
+  function itemRows(items, cur, qtyDecimals) {
+    var rows = items.filter(usedRow).map(function (it) {
+      var q = num(it.qty);
+      return "<tr><td>" + esc(it.description || "&mdash;") + "</td>" +
+             '<td class="num">' + (qtyDecimals ? q.toFixed(2) : String(q)) + "</td>" +
+             '<td class="num">' + money(it.rate, cur) + "</td>" +
+             '<td class="num">' + money(q * num(it.rate), cur) + "</td></tr>";
+    }).join("");
+    return rows;
+  }
+
+  function renderJob() {
+    var out = $("#doc");
+    if (!out) return;
+    var s = jobState();
+    var cur = s.currency || "USD";
+    /* Total only the lines the document actually shows. */
+    var t = jobTotals(s.labour.filter(usedRow), s.parts.filter(usedRow), {
+      callOut: s.callOut, taxPct: s.taxPct,
+      discount: { type: s.discountType, value: s.discountValue }
+    });
+
+    var labourRows = itemRows(s.labour, cur, true) ||
+      '<tr><td colspan="4" style="color:#5b6b82">No labour recorded.</td></tr>';
+    var partsRows = itemRows(s.parts, cur, false) ||
+      '<tr><td colspan="4" style="color:#5b6b82">No parts or materials used.</td></tr>';
+
+    var totals = "";
+    totals += "<div><span>Labour (" + t.hours.toFixed(2) + " h)</span><span>" + money(t.labour, cur) + "</span></div>";
+    totals += "<div><span>Parts and materials</span><span>" + money(t.parts, cur) + "</span></div>";
+    if (t.callOut) totals += "<div><span>Call-out</span><span>" + money(t.callOut, cur) + "</span></div>";
+    totals += "<div><span>Subtotal</span><span>" + money(t.subtotal, cur) + "</span></div>";
+    if (t.discount) totals += "<div><span>Discount</span><span>-" + money(t.discount, cur) + "</span></div>";
+    if (t.tax) totals += "<div><span>" + esc(s.taxLabel || "Tax") + " (" + num(s.taxPct) + "%)</span><span>" + money(t.tax, cur) + "</span></div>";
+    totals += '<div class="grand"><span>Job value</span><span>' + money(t.total, cur) + "</span></div>";
+
+    var scheduled = esc(s.date || todayISO()) +
+      (s.window ? ' <span style="color:#5b6b82">(' + esc(s.window) + ")</span>" : "");
+
+    out.innerHTML =
+      '<div class="doc-head">' +
+        '<div><div class="doc-title">Work Order</div>' +
+          '<div style="margin-top:8px"><span class="doc-stamp">Record of work &mdash; not an invoice</span></div>' +
+        "</div>" +
+        '<div class="doc-from"><strong>' + esc(s.from || "Your business name") + "</strong><br>" +
+          esc(s.fromDetails || "").replace(/\n/g, "<br>") + "</div>" +
+      "</div>" +
+      '<div class="doc-meta">' +
+        '<div class="blk"><div class="lbl">Site</div>' +
+          "<strong>" + esc(s.to || "Customer name") + "</strong><br>" +
+          esc(s.toDetails || "").replace(/\n/g, "<br>") +
+          (s.contact ? "<br>" + esc(s.contact) : "") + "</div>" +
+        '<div class="blk"><div class="lbl">Job number</div>' + esc(s.number || "JOB-0001") +
+          '<div class="lbl" style="margin-top:8px">Job type</div>' +
+          esc(JOB_TYPES[s.jobType] || JOB_TYPES.service) + "</div>" +
+        '<div class="blk"><div class="lbl">Scheduled</div>' + scheduled +
+          '<div class="lbl" style="margin-top:8px">Attended by</div>' +
+          esc(s.technician || "&mdash;") + "</div>" +
+      "</div>" +
+      '<div class="sec-label">Work requested</div>' +
+      '<div class="sec-body">' + esc(s.requested || "") + "</div>" +
+      '<div class="sec-label">Labour</div>' +
+      "<table><thead><tr><th>Description</th>" +
+        '<th class="num">Hours</th><th class="num">Rate</th><th class="num">Amount</th>' +
+        "</tr></thead><tbody>" + labourRows + "</tbody></table>" +
+      '<div class="sec-label">Parts and materials</div>' +
+      "<table><thead><tr><th>Description</th>" +
+        '<th class="num">Qty</th><th class="num">Unit</th><th class="num">Amount</th>' +
+        "</tr></thead><tbody>" + partsRows + "</tbody></table>" +
+      '<div class="sec-label">Work performed and findings</div>' +
+      '<div class="sec-body">' + esc(s.performed || "") + "</div>" +
+      '<div class="totals" style="margin-top:18px">' + totals + "</div>" +
+      (s.notes ? '<div class="doc-notes">' + esc(s.notes) + "</div>" : "") +
+      '<div class="sig-grid">' +
+        '<div><div class="sig-line">Customer signature</div></div>' +
+        '<div><div class="sig-line">Date</div></div>' +
+        '<div><div class="sig-line">Engineer / technician signature</div></div>' +
+        '<div><div class="sig-line">Date</div></div>' +
+      "</div>";
+
+    try {
+      localStorage.setItem("pt-job-sheet", JSON.stringify(s));
+    } catch (e) { /* private mode: the tool still works, it just won't remember */ }
+  }
+
+  function wireJobSheet() {
+    var raw = null;
+    try { raw = localStorage.getItem("pt-job-sheet"); } catch (e) { raw = null; }
+    var s = null;
+    if (raw) { try { s = JSON.parse(raw); } catch (e) { s = null; } }
+    if (s) {
+      JOB_FIELDS.forEach(function (k) {
+        var el = document.getElementById(k);
+        if (el && s[k] != null && s[k] !== "") el.value = s[k];
+      });
+    }
+    if (!val("date")) {
+      var dEl = document.getElementById("date");
+      if (dEl) dEl.value = todayISO();
+    }
+    if (!val("number")) {
+      var nEl = document.getElementById("number");
+      if (nEl) nEl.value = "JOB-0001";
+    }
+    if (s && s.labour && s.labour.length) {
+      s.labour.forEach(function (l) { addItemRow(l, "labour", LABOUR_OPTS); });
+    } else {
+      addItemRow(null, "labour", LABOUR_OPTS);
+      addItemRow(null, "labour", LABOUR_OPTS);
+    }
+    if (s && s.parts && s.parts.length) {
+      s.parts.forEach(function (p) { addItemRow(p, "parts", PARTS_OPTS); });
+    } else {
+      addItemRow(null, "parts", PARTS_OPTS);
+      addItemRow(null, "parts", PARTS_OPTS);
+    }
+
+    $$("#tool-form input, #tool-form select, #tool-form textarea").forEach(function (el) {
+      el.addEventListener("input", renderJob);
+      el.addEventListener("change", renderJob);
+    });
+    var addL = $("#add-labour");
+    if (addL) addL.addEventListener("click", function () {
+      addItemRow(null, "labour", LABOUR_OPTS); renderJob();
+    });
+    var addP = $("#add-part");
+    if (addP) addP.addEventListener("click", function () {
+      addItemRow(null, "parts", PARTS_OPTS); renderJob();
+    });
+    var print = $("#print-doc");
+    if (print) print.addEventListener("click", function () { window.print(); });
+    var reset = $("#reset-doc");
+    if (reset) reset.addEventListener("click", function () {
+      if (!window.confirm("Clear this job sheet and start over?")) return;
+      try { localStorage.removeItem("pt-job-sheet"); } catch (e) { /* nothing to clear */ }
+      window.location.reload();
+    });
+    renderJob();
+  }
+
   /* ---------- calculators ---------- */
 
   function setOut(id, text) { var el = document.getElementById(id); if (el) el.textContent = text; }
@@ -536,6 +768,7 @@
   document.addEventListener("DOMContentLoaded", function () {
     var tool = document.body.getAttribute("data-tool");
     if (!tool) return;
+    if (tool === "job-sheet") { wireJobSheet(); return; }
     if (DOC_KINDS[tool]) { wireDocTool(tool); return; }
     var calc = CALCS[tool];
     if (!calc) return;
