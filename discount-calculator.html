@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discount Calculator — Sale Price and What It Costs Your Profit</title>
+<meta name="description" content="Work out a sale price from a discount, or the discount from a sale price, and see how much profit the discount really gives away.">
+<link rel="canonical" href="https://papertrailforms.com/discount-calculator.html">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128441;</text></svg>">
+<link rel="stylesheet" href="styles.css">
+<script src="config.js" defer></script>
+<script src="tools.js" defer></script>
+</head>
+<body data-tool="discount">
+<header class="site-header"><nav class="nav container">
+  <a class="brand" href="index.html">&#128441; Paper Trail <span style="opacity:.75">Forms</span></a>
+  <div class="nav-links">
+    <a href="invoice-generator.html">Invoice</a>
+    <a href="receipt-maker.html">Receipt</a>
+    <a href="estimate-generator.html">Estimate</a>
+    <a href="job-sheet-generator.html">Job Sheet</a>
+    <a href="index.html#calculators">Calculators</a>
+    <a href="guides/index.html">Guides</a>
+    <a class="btn-cta" data-shop-link href="#">Printable Forms</a>
+  </div>
+</nav></header>
+<main class="container">
+  <p class="breadcrumb"><a href="./index.html">Home</a> &rsaquo; Discount &amp; Sale Price Calculator</p>
+  <div class="tool-layout">
+    <form class="panel" id="tool-form" onsubmit="return false;">
+      <h2>Your numbers</h2>
+      <p class="hint">Results update as you type. Nothing leaves your browser.</p>
+      <div class="field"><label for="mode">I want to</label><select id="mode"><option value="pct">Take a percentage off a price</option><option value="sale">Work out the discount from a sale price</option></select></div>
+<div class="field"><label for="list">List price</label><input type="number" step="any" id="list" value="100"></div>
+<div class="field" data-mode-field="pct"><label for="discountPct">Discount %</label><input type="number" step="any" id="discountPct" value="20"></div>
+<div class="field" data-mode-field="sale"><label for="salePrice">Sale price</label><input type="number" step="any" id="salePrice" value="80"></div>
+<div class="field"><label for="cost">Your cost (optional, unlocks the margin check)</label><input type="number" step="any" id="cost" value="60"></div>
+<div class="field"><label for="currency">Currency</label><select id="currency"><option value="USD">USD — US dollar</option><option value="CAD">CAD — Canadian dollar</option><option value="EUR">EUR — Euro</option><option value="GBP">GBP — British pound</option><option value="AUD">AUD — Australian dollar</option><option value="NZD">NZD — NZ dollar</option><option value="INR">INR — Indian rupee</option><option value="ZAR">ZAR — South African rand</option></select></div>
+    </form>
+    <div class="readout">
+      <div class="big-label" id="out-label">Sale price</div>
+      <div class="big" id="out-big">&mdash;</div>
+      <div class="rows" id="out-rows"></div>
+      <p class="explain">Figures are rounded to two decimals. Use them as a working
+      estimate and check anything that has to be exact against your own records.</p>
+    </div>
+  </div>
+
+  <article class="prose">
+  <h1>Discount &amp; Sale Price Calculator</h1>
+  <p>Taking 20% off the price does not take 20% off your profit — it can take half of it. Add your cost and this shows the margin before and after, and how much more you would have to sell to end up with the same money.</p>
+  <h2>Frequently asked questions</h2>
+<details class="faq"><summary>Why does a 20% discount cost me so much more than 20%?</summary><p>Because the discount comes out of the profit, not out of the whole price. Your costs do not fall when you drop the price. On an item costing 60 and listed at 100, the profit is 40; take 20 off the price and the profit is 20. The price fell 20% and the profit fell 50%.</p></details>
+<details class="faq"><summary>What is the break-even volume figure?</summary><p>How many times your usual volume you would have to sell at the discounted price to make the same total profit as before. If it says 2.00&times;, the sale has to double your unit sales just to stand still — and every one of those extra units still costs you time and materials.</p></details>
+<details class="faq"><summary>Why does it refuse to show a break-even for a big discount?</summary><p>Because once the sale price is at or below your cost, no amount of volume gets the money back. Selling more only loses more. Printing a number there would be the exact mistake this calculator exists to prevent.</p></details>
+<details class="faq"><summary>What should I use instead of discounting?</summary><p>Usually something that costs you less than the margin does: a faster turnaround, an extra item with a low cost to you, or a smaller scope at the lower price. See <a href="./guides/how-to-discount-without-devaluing-your-work.html">how to discount without devaluing your work</a>.</p></details>
+  <h2>Keep reading</h2>
+  <p><a href="./guides/index.html">All guides</a> &middot; <a href="./invoice-generator.html">Free invoice generator</a> &middot; <a href="./guides/how-to-charge-late-fees.html">How to charge late fees</a> &middot; <a href="./guides/how-to-set-your-freelance-rate.html">Setting your rate</a></p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">
+  <div class="foot-links">
+    <a href="index.html">Home</a>
+    <a href="invoice-generator.html">Invoice Generator</a>
+    <a href="receipt-maker.html">Receipt Maker</a>
+    <a href="estimate-generator.html">Estimate Generator</a>
+    <a href="job-sheet-generator.html">Job Sheet Generator</a>
+    <a href="guides/index.html">Guides</a>
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+  </div>
+  <p class="legal">Paper Trail Forms provides free document tools and general business
+  information. It is not a law firm, an accounting firm, or a tax adviser, and
+  nothing on this site is legal, accounting, or tax advice &mdash; requirements
+  for invoices, receipts, late fees, and record retention vary by country and by
+  jurisdiction, so verify what applies to you before relying on it. The tools run
+  entirely in your browser: what you type is never transmitted to us and is
+  stored only in your own browser. &copy; 2026 Paper Trail Forms</p>
+</div></footer>
+</body>
+</html>

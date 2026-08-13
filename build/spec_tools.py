@@ -509,6 +509,58 @@ CALC_TOOLS = [
         ],
     },
     {
+        "slug": "discount-calculator.html",
+        "tool": "discount",
+        "title": "Discount Calculator — Sale Price and What It Costs Your Profit",
+        "description": ("Work out a sale price from a discount, or the discount "
+                        "from a sale price, and see how much profit the discount "
+                        "really gives away."),
+        "h1": "Discount &amp; Sale Price Calculator",
+        "lede": ("Taking 20% off the price does not take 20% off your profit — "
+                 "it can take half of it. Add your cost and this shows the "
+                 "margin before and after, and how much more you would have to "
+                 "sell to end up with the same money."),
+        "keyword": "discount calculator sale price",
+        "big_label": "Sale price",
+        "fields": [
+            ("select", "mode", "I want to", [
+                ("pct", "Take a percentage off a price"),
+                ("sale", "Work out the discount from a sale price"),
+            ], ""),
+            ("number", "list", "List price", "100"),
+            ("number", "discountPct", "Discount %", "20", "pct"),
+            ("number", "salePrice", "Sale price", "80", "sale"),
+            ("number", "cost", "Your cost (optional, unlocks the margin check)",
+             "60"),
+            ("currency", "currency", "Currency", None),
+        ],
+        "faq": [
+            ("Why does a 20% discount cost me so much more than 20%?",
+             "Because the discount comes out of the profit, not out of the "
+             "whole price. Your costs do not fall when you drop the price. On "
+             "an item costing 60 and listed at 100, the profit is 40; take 20 "
+             "off the price and the profit is 20. The price fell 20% and the "
+             "profit fell 50%."),
+            ("What is the break-even volume figure?",
+             "How many times your usual volume you would have to sell at the "
+             "discounted price to make the same total profit as before. If it "
+             "says 2.00&times;, the sale has to double your unit sales just to "
+             "stand still — and every one of those extra units still costs you "
+             "time and materials."),
+            ("Why does it refuse to show a break-even for a big discount?",
+             "Because once the sale price is at or below your cost, no amount "
+             "of volume gets the money back. Selling more only loses more. "
+             "Printing a number there would be the exact mistake this "
+             "calculator exists to prevent."),
+            ("What should I use instead of discounting?",
+             "Usually something that costs you less than the margin does: a "
+             "faster turnaround, an extra item with a low cost to you, or a "
+             "smaller scope at the lower price. See "
+             "<a href=\"./guides/how-to-discount-without-devaluing-your-work"
+             ".html\">how to discount without devaluing your work</a>."),
+        ],
+    },
+    {
         "slug": "payment-terms-calculator.html",
         "tool": "payment-terms",
         "title": "Invoice Due Date Calculator — Net 30, EOM, and Early-Payment Discounts",

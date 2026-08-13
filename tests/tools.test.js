@@ -138,6 +138,57 @@ t("marginMarkup survives a 100% margin request", () => {
   assert.ok(isFinite(r.price), "price stays finite");
 });
 
+/* ---- discount and sale price ---- */
+t("discountPrice takes a percentage off a list price", () => {
+  const r = PT.discountPrice({ list: 100, discountPct: 20 });
+  assert.strictEqual(r.salePrice, 80);
+  assert.strictEqual(r.saved, 20);
+  near(r.discountPct, 20, "discount pct");
+});
+t("discountPrice derives the discount from a sale price", () => {
+  const r = PT.discountPrice({ list: 250, salePrice: 200 });
+  near(r.discountPct, 20, "derived discount");
+  assert.strictEqual(r.saved, 50);
+});
+t("discountPrice leaves the margin analysis out until a cost is given", () => {
+  const r = PT.discountPrice({ list: 100, discountPct: 20 });
+  assert.strictEqual(r.hasCost, false);
+  assert.strictEqual(r.breakEvenMultiplier, undefined,
+                     "no cost means no invented margin figures");
+});
+t("discountPrice shows the profit falling faster than the price", () => {
+  /* the headline claim of the guide, pinned as a test: 10% off a 30%
+     margin costs a third of the profit, not a tenth */
+  const r = PT.discountPrice({ list: 1000, cost: 700, discountPct: 10 });
+  assert.strictEqual(r.profitBefore, 300);
+  assert.strictEqual(r.profitAfter, 200);
+  near(r.marginBefore, 30, "margin before");
+  near(r.marginAfter, 22.22, "margin after");
+  near(r.profitDropPct, 33.33, "share of profit given up");
+});
+t("discountPrice reports the volume needed to stand still", () => {
+  const r = PT.discountPrice({ list: 100, cost: 60, discountPct: 20 });
+  assert.strictEqual(r.profitAfter, 20);
+  near(r.breakEvenMultiplier, 2, "must double the volume");
+  near(r.extraVolumePct, 100, "100% more units");
+});
+t("discountPrice refuses a break-even once the sale is at or below cost", () => {
+  const r = PT.discountPrice({ list: 100, cost: 60, discountPct: 50 });
+  assert.strictEqual(r.belowCost, true);
+  assert.strictEqual(r.breakEvenMultiplier, null,
+                     "no volume recovers a below-cost price");
+  assert.strictEqual(r.extraVolumePct, null);
+});
+t("discountPrice clamps a discount to the 0-100 range", () => {
+  assert.strictEqual(PT.discountPrice({ list: 100, discountPct: 140 }).salePrice, 0);
+  assert.strictEqual(PT.discountPrice({ list: 100, discountPct: -30 }).salePrice, 100);
+});
+t("discountPrice survives a zero list price", () => {
+  const r = PT.discountPrice({ list: 0, salePrice: 0 });
+  assert.ok(isFinite(r.discountPct), "no divide by zero");
+  assert.strictEqual(r.salePrice, 0);
+});
+
 /* ---- due dates ---- */
 t("dueDate handles net terms", () => {
   assert.strictEqual(PT.dueDate("2026-01-15", "net30").due, "2026-02-14");

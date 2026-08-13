@@ -232,6 +232,56 @@
     };
   }
 
+  /**
+   * Discount and sale price, with the part that actually matters:
+   * what the discount does to the profit, not to the price.
+   *
+   * Supply list, and exactly one of discountPct or salePrice.
+   * Supply cost as well and the margin analysis is filled in — a
+   * discount is a cut off the price but it comes entirely out of the
+   * profit, so 20% off a 40%-margin job is half the profit gone.
+   */
+  function discountPrice(o) {
+    o = o || {};
+    var list = num(o.list), pct, sale;
+    if (o.salePrice != null && o.salePrice !== "") {
+      sale = num(o.salePrice);
+      pct = list ? ((list - sale) / list) * 100 : 0;
+    } else {
+      pct = Math.min(Math.max(num(o.discountPct), 0), 100);
+      sale = list * (1 - pct / 100);
+    }
+    var hasCost = o.cost != null && o.cost !== "" && num(o.cost) > 0;
+    var r = {
+      list: round2(list),
+      salePrice: round2(sale),
+      saved: round2(list - sale),
+      discountPct: round2(pct),
+      hasCost: hasCost
+    };
+    if (!hasCost) return r;
+
+    var cost = num(o.cost);
+    var profitBefore = list - cost, profitAfter = sale - cost;
+    r.cost = round2(cost);
+    r.profitBefore = round2(profitBefore);
+    r.profitAfter = round2(profitAfter);
+    r.marginBefore = list ? round2((profitBefore / list) * 100) : 0;
+    r.marginAfter = sale ? round2((profitAfter / sale) * 100) : 0;
+    r.profitDropPct = profitBefore > 0
+      ? round2(((profitBefore - profitAfter) / profitBefore) * 100) : 0;
+    r.belowCost = profitAfter <= 0;
+    /* How many times the old volume you must now sell to end up with the
+       same money. Undefined once the discount eats the whole margin —
+       no amount of volume fixes selling at or below cost, and showing a
+       number there would be the exact lie this tool exists to prevent. */
+    r.breakEvenMultiplier = (profitBefore > 0 && profitAfter > 0)
+      ? round2(profitBefore / profitAfter) : null;
+    r.extraVolumePct = r.breakEvenMultiplier !== null
+      ? round2((r.breakEvenMultiplier - 1) * 100) : null;
+    return r;
+  }
+
   /* ---- date helpers: UTC only, so a timezone never shifts a due date ---- */
   function parseDate(s) {
     var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s || "").trim());
@@ -297,6 +347,7 @@
     docTotals: docTotals, jobTotals: jobTotals,
     salesTax: salesTax, lateFee: lateFee,
     hourlyRate: hourlyRate, marginMarkup: marginMarkup,
+    discountPrice: discountPrice,
     dueDate: dueDate, earlyPayDiscount: earlyPayDiscount,
     parseDate: parseDate, fmtDate: fmtDate
   };
@@ -738,6 +789,42 @@
         ["Markup (profit ÷ cost)", r.markupPct.toFixed(2) + "%"]
       ]);
       /* a field may list several modes, space separated */
+      $$("[data-mode-field]").forEach(function (el) {
+        var modes = el.getAttribute("data-mode-field").split(/\s+/);
+        el.hidden = modes.indexOf(mode) === -1;
+      });
+    },
+    "discount": function () {
+      var cur = val("currency") || "USD";
+      var mode = val("mode") || "pct";
+      var o = { list: val("list"), cost: val("cost") };
+      if (mode === "sale") o.salePrice = val("salePrice");
+      else o.discountPct = val("discountPct");
+      var r = discountPrice(o);
+      setOut("out-big", money(r.salePrice, cur));
+      var rows = [
+        ["List price", money(r.list, cur)],
+        ["Discount", r.discountPct.toFixed(2) + "%"],
+        ["Amount off", money(r.saved, cur)],
+        ["Sale price", money(r.salePrice, cur)]
+      ];
+      if (r.hasCost) {
+        rows.push(["Your cost", money(r.cost, cur)]);
+        rows.push(["Profit before discount", money(r.profitBefore, cur)]);
+        rows.push(["Profit after discount", money(r.profitAfter, cur)]);
+        rows.push(["Margin before / after",
+                   r.marginBefore.toFixed(1) + "% → " + r.marginAfter.toFixed(1) + "%"]);
+        rows.push(["Profit given up", r.profitDropPct.toFixed(1) + "%"]);
+        if (r.belowCost) {
+          rows.push(["Break-even volume",
+                     "Not reachable — this price is at or below your cost"]);
+        } else {
+          rows.push(["To earn the same money, sell",
+                     r.breakEvenMultiplier.toFixed(2) + "× the volume ("
+                     + r.extraVolumePct.toFixed(0) + "% more)"]);
+        }
+      }
+      setRows("out-rows", rows);
       $$("[data-mode-field]").forEach(function (el) {
         var modes = el.getAttribute("data-mode-field").split(/\s+/);
         el.hidden = modes.indexOf(mode) === -1;

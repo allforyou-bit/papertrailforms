@@ -249,6 +249,42 @@ t("margin calculator swaps its input field with the mode", () => {
   assert.strictEqual(w.document.getElementById("out-big").textContent, "$100.00");
 });
 
+t("discount calculator swaps its input field with the mode", () => {
+  const w = load("discount-calculator.html");
+  const pctField = w.document.querySelector('[data-mode-field="pct"]');
+  const saleField = w.document.querySelector('[data-mode-field="sale"]');
+  assert.ok(pctField && saleField, "both mode-specific fields exist");
+  set(w, "mode", "pct");
+  assert.strictEqual(pctField.hidden, false, "percent field shown in pct mode");
+  assert.strictEqual(saleField.hidden, true, "sale field hidden in pct mode");
+  set(w, "mode", "sale");
+  assert.strictEqual(pctField.hidden, true, "percent field hidden in sale mode");
+  assert.strictEqual(saleField.hidden, false, "sale field shown in sale mode");
+});
+
+t("discount calculator shows the margin damage on the page", () => {
+  const w = load("discount-calculator.html");
+  set(w, "mode", "pct");
+  set(w, "list", "100");
+  set(w, "cost", "60");
+  set(w, "discountPct", "20");
+  assert.strictEqual(w.document.getElementById("out-big").textContent, "$80.00");
+  const rows = w.document.getElementById("out-rows").textContent;
+  assert.ok(rows.includes("40.0% → 25.0%"), "margin before and after shown");
+  assert.ok(rows.includes("2.00×"), "break-even volume multiplier shown");
+});
+
+t("discount calculator never prints a break-even below cost", () => {
+  const w = load("discount-calculator.html");
+  set(w, "mode", "pct");
+  set(w, "list", "100");
+  set(w, "cost", "60");
+  set(w, "discountPct", "50");
+  const rows = w.document.getElementById("out-rows").textContent;
+  assert.ok(rows.includes("Not reachable"), "below-cost sale is called out");
+  assert.ok(!/\d×/.test(rows), "no volume multiplier is offered");
+});
+
 t("due date calculator prices an early-payment discount", () => {
   const w = load("payment-terms-calculator.html");
   set(w, "date", "2026-01-15");

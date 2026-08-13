@@ -902,4 +902,159 @@ GUIDES = [
              "tax time."),
         ],
     },
+    {
+        "slug": "how-to-discount-without-devaluing-your-work.html",
+        "title": "How to Discount Without Devaluing Your Work",
+        "description": ("What a discount actually costs in profit, why the "
+                        "volume rarely makes it back, and the concessions to "
+                        "offer instead when a customer asks for a better price."),
+        "h1": "How to Discount Without Devaluing Your Work",
+        "meta": "Pricing",
+        "body": """
+  <p>A customer asks for 10% off. It sounds like a small thing to give away, and
+  in the moment saying yes is far easier than saying no. The arithmetic
+  disagrees, and it disagrees more the thinner your margin already is.</p>
+
+  <h2>A discount does not come out of the price</h2>
+
+  <p>It comes out of the profit. Your costs do not move when you drop your
+  price &mdash; the materials cost the same, the van still needs fuel, the hours
+  still get worked. Every unit of discount is a unit of profit, so the right
+  question is never &ldquo;what percentage of the price is this?&rdquo; but
+  &ldquo;what percentage of the <em>margin</em> is this?&rdquo;</p>
+
+  <p>Take a job you price at $1,000 that costs you $700. The profit is $300, a
+  30% margin. Now give the 10%:</p>
+
+  <table>
+  <thead>
+  <tr><th></th><th>Full price</th><th>10% off</th></tr>
+  </thead>
+  <tbody>
+  <tr><td>Price</td><td>$1,000</td><td>$900</td></tr>
+  <tr><td>Your cost</td><td>$700</td><td>$700</td></tr>
+  <tr><td>Profit</td><td>$300</td><td>$200</td></tr>
+  <tr><td>Margin</td><td>30%</td><td>22.2%</td></tr>
+  </tbody>
+  </table>
+
+  <p>The price fell 10%. The profit fell 33%. To finish the year with the same
+  money you would now need to do <strong>half as many jobs again</strong> &mdash;
+  and each of those extra jobs costs you another $700 of materials and another
+  week of your life. Our
+  <a href="../discount-calculator.html">discount calculator</a> does this
+  arithmetic for whatever your real numbers are; put your cost in and it shows
+  the margin before and after alongside the volume you would have to find.</p>
+
+  <p>The thinner the margin, the more violent this gets. At a 20% margin, a 10%
+  discount halves your profit. At a 15% margin it takes two thirds of it. If you
+  are not sure what your margin actually is, the
+  <a href="../margin-markup-calculator.html">margin and markup calculator</a>
+  and the guide on <a href="./margin-vs-markup.html">margin vs markup</a> are
+  the place to start, because pricing off markup while thinking in margin is how
+  people end up discounting money they never had.</p>
+
+  <h2>The volume almost never arrives</h2>
+
+  <p>The case for discounting is that a lower price wins more work. Sometimes it
+  does. The problem is the scale required: not a few more jobs, but 50% more
+  jobs for a 10% cut on a 30% margin. That is a different business, not a busier
+  version of the one you have.</p>
+
+  <p>It also assumes you have the capacity to deliver it. A shop already running
+  at 80% of what it can physically do cannot absorb 50% more work at any price.
+  In that situation the discount does not buy volume at all &mdash; it just
+  lowers the rate on the work you were going to do anyway.</p>
+
+  <h2>What the discount teaches the customer</h2>
+
+  <p>The cost that does not appear on the invoice is what a discount says about
+  the first number. If 10% comes off the moment someone asks, the original price
+  was a negotiating position, and every future quote you send that customer will
+  be read as one. Worse, it travels: the customer who got 10% mentions it to the
+  neighbour you quote next month.</p>
+
+  <p>This is the difference between a discount that is <em>earned</em> and one
+  that is <em>conceded</em>. An earned discount has a reason attached that the
+  customer can see &mdash; volume, timing, prepayment, a repeat relationship. A
+  conceded discount has only one reason: you were asked.</p>
+
+  <h2>Give something other than margin</h2>
+
+  <p>When a customer pushes on price, they are usually managing a budget or
+  testing whether the number is real. Both can often be answered with something
+  that costs you less than the margin does.</p>
+
+  <ul class="checklist">
+  <li><strong>Reduce the scope, not the rate.</strong> Take something out of the
+  job so the lower price buys less work. The price per hour holds, the customer
+  gets their budget, and nothing about your rate has been renegotiated.</li>
+  <li><strong>Trade the discount for terms.</strong> A few percent for payment
+  up front or within ten days is a discount you are buying something with. Our
+  <a href="../payment-terms-calculator.html">due date calculator</a> prices what
+  an early-payment discount really costs on an annualised basis before you
+  offer one &mdash; it is usually more than people expect.</li>
+  <li><strong>Add something cheap to you and valuable to them.</strong> A
+  longer warranty, a priority slot, a small extra you already have the materials
+  for. Value delivered, margin intact.</li>
+  <li><strong>Discount the second thing, not the first.</strong> Full price on
+  the job, a reduction on an add-on. The headline rate survives.</li>
+  <li><strong>Let the price stand.</strong> &ldquo;That is what the job costs
+  to do properly&rdquo; is a complete answer, and the customer who walks over
+  10% was rarely a customer you would have enjoyed.</li>
+  </ul>
+
+  <h2>If you are going to discount, do it deliberately</h2>
+
+  <p>There are good reasons to drop a price. Filling a genuinely empty week
+  beats an idle one, as long as the price still clears your costs. Winning a
+  first job with a customer who will bring five more can be worth it. Clearing
+  old stock or an old service line is fine, because the alternative is zero.</p>
+
+  <p>What separates these from a habit is that each has a boundary. Set the
+  floor before the conversation starts &mdash; the price below which you would
+  rather not have the work &mdash; and know it as a number, not a feeling. Put a
+  reason and an end date on any discount you do give, so it reads as a decision
+  rather than as your new price. And show it as a line on the document: an
+  <a href="../invoice-generator.html">invoice</a> or an
+  <a href="../estimate-generator.html">estimate</a> that lists the full price
+  and the discount separately keeps the real value of the work visible, which
+  a quietly lowered total never does.</p>
+
+  <div class="notice">Watch the rules around advertised sale prices. Many
+  jurisdictions require a &ldquo;was&rdquo; price to have been genuinely charged
+  for a set period before you can advertise against it. Check what applies where
+  you work &mdash; nothing here is legal advice.</div>
+
+  <h2>The short version</h2>
+
+  <p>Work out what the discount does to your profit before you agree to it, not
+  after. If the answer is a third of the margin, treat it as a third of the
+  margin. And when you do say yes, make sure you got something for it &mdash;
+  terms, scope, or a customer worth having &mdash; because the one thing a
+  discount should never buy is the right to be asked again.</p>
+""",
+        "faq": [
+            ("How much does a 10% discount really cost me?",
+             "It depends entirely on your margin. On a 30% margin it takes a "
+             "third of your profit; on a 20% margin it takes half; on a 15% "
+             "margin it takes two thirds. The percentage off the price tells "
+             "you almost nothing on its own."),
+            ("Is it better to discount or to add something free?",
+             "Usually to add something, as long as the thing you add costs you "
+             "less than the margin you would have given up. A warranty "
+             "extension or a priority slot can cost you very little and read "
+             "as worth more than the discount it replaced."),
+            ("Should I ever discount to win a first job?",
+             "It can be worth it when the customer is likely to return or to "
+             "refer, and when the price still covers your costs. Say out loud "
+             "that it is an introductory price with an end date, or it becomes "
+             "the price for every job after it."),
+            ("What if a customer says a competitor is cheaper?",
+             "Ask what the competitor is quoting for. Cheaper quotes are often "
+             "quoting less work, and a line-by-line estimate is the fastest way "
+             "to show that. If the scope really is identical and you cannot "
+             "match it profitably, that job is not yours to win."),
+        ],
+    },
 ]
