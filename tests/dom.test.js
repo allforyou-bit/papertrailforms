@@ -319,5 +319,29 @@ t("no advertising script loads while adsenseClient is empty", () => {
   assert.strictEqual(ads.length, 0, "no ad script injected");
 });
 
+/* ---------------- lead magnet landing ---------------- */
+t("free kit page offers the download with no email gate in front of it", () => {
+  const w = load("free-paperwork-kit.html");
+  const dl = w.document.querySelector('a[download]');
+  assert.ok(dl, "a download link exists");
+  const href = dl.getAttribute("href");
+  assert.ok(/paper-trail-printable-forms-kit\.pdf$/.test(href),
+            "download points at the kit pdf, got " + href);
+  assert.ok(fs.existsSync(path.join(ROOT, href.replace(/^\.\//, ""))),
+            "the pdf the page links to actually exists in the repo");
+  assert.strictEqual(dl.hidden, false, "the download is never gated");
+  assert.ok(!dl.closest("[data-requires-email]"),
+            "the download must not sit inside the email-gated block");
+});
+
+t("email capture stays hidden until MailerLite ids are configured", () => {
+  const w = load("free-paperwork-kit.html");
+  const block = w.document.querySelector("[data-requires-email]");
+  assert.ok(block, "the page has an email block to gate");
+  const cfg = w.SITE_CONFIG.email || {};
+  assert.strictEqual(block.hidden, !(cfg.mlAccount && cfg.mlForm),
+                     "visibility follows the config, not the markup");
+});
+
 if (!process.exitCode) console.log(`dom tests: ${passed} checks passed`);
 else console.error("dom tests FAILED");

@@ -23,7 +23,7 @@ from spec_guides import GUIDES  # noqa: E402
 # day it is approved, nothing but config.js and this line need to change.
 SITE_URL = "https://papertrailforms.com"
 BRAND = "Paper Trail Forms"
-TODAY = "2026-08-06"
+TODAY = "2026-08-20"
 
 FAVICON = ("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' "
            "viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128441;</text></svg>")
@@ -56,6 +56,7 @@ def footer(depth):
     <a href="{u}estimate-generator.html">Estimate Generator</a>
     <a href="{u}job-sheet-generator.html">Job Sheet Generator</a>
     <a href="{u}guides/index.html">Guides</a>
+    <a href="{u}free-paperwork-kit.html">Free Printable Kit</a>
     <a href="{u}about.html">About</a>
     <a href="{u}privacy.html">Privacy</a>
     <a href="{u}terms.html">Terms</a>
@@ -368,7 +369,16 @@ def render_home():
   <p style="margin-top:18px"><a href="./guides/index.html">See all guides &rarr;</a></p>
 </div></section>
 
-<section class="block alt" data-requires-shop><div class="container">
+<section class="block alt"><div class="container">
+  <div class="cta-box">
+    <h3>Need a form to write on instead?</h3>
+    <p>A free 3-page PDF you print once and keep in the van: an invoice, an estimate
+    with a signature strip, and three tear-off receipts. No signup, no watermark.</p>
+    <a class="btn btn-primary" href="./free-paperwork-kit.html">Get the free printable kit</a>
+  </div>
+</div></section>
+
+<section class="block" data-requires-shop><div class="container">
   <div class="cta-box">
     <h3>Prefer a printable pack you can fill in and reuse?</h3>
     <p>Our fillable PDF form packs cover invoices, estimates, receipts, mileage,
@@ -401,6 +411,96 @@ def render_home():
                 body.format(doc_cards=doc_cards, calc_cards=calc_cards,
                             guide_cards=guide_cards),
                 depth=0, canonical=SITE_URL + "/")
+
+
+# ------------------------------------------------------ lead magnet
+
+# Built by build/build_lead_magnet.py. Print-and-write forms, deliberately
+# not the fillable editions the shop sells -- see that script's header for
+# why the free/paid line is drawn there.
+KIT_PDF = "downloads/paper-trail-printable-forms-kit.pdf"
+
+
+def render_lead_magnet():
+    body = """<main class="container narrow">
+  <p class="breadcrumb"><a href="./index.html">Home</a> &rsaquo; Free printable forms kit</p>
+  <article class="prose">
+  <h1>Free Printable Small Business Forms Kit</h1>
+  <p>Three US-letter forms in one PDF &mdash; an invoice, an estimate, and a page of
+  three tear-off receipts. Print them, keep them on the van or by the till, and fill
+  them in with a pen. No signup, no watermark, no email required.</p>
+
+  <div class="cta-box">
+    <h3>Download the kit</h3>
+    <p>One PDF, 3 pages, ready to print. Nothing to fill in first.</p>
+    <a class="btn btn-primary" href="./{kit}" download>Download the PDF</a>
+  </div>
+
+  <div data-requires-email hidden>
+    <h2>Want the occasional update?</h2>
+    <p>We send a short note when a new tool or guide goes up &mdash; a few times a
+    year, never more. The download above works whether or not you sign up; this is
+    a list, not a gate.</p>
+    <div id="email-form"></div>
+  </div>
+
+  <h2>What is in it</h2>
+  <ul>
+    <li><strong>Invoice</strong> &mdash; ten line items, subtotal, tax, discount and
+    total, plus a notes area for payment terms.</li>
+    <li><strong>Estimate</strong> &mdash; eight line items, a scope and exclusions
+    box, and a signature strip so the client can accept it on the spot.</li>
+    <li><strong>Receipts, three to a page</strong> &mdash; received from, amount, what
+    it was for, payment method, received by, and balance due, with cut lines.</li>
+  </ul>
+
+  <h2>When to print a form instead of using the tools</h2>
+  <p>Most of the time you should not. The
+  <a href="./invoice-generator.html">invoice generator</a>,
+  <a href="./estimate-generator.html">estimate generator</a> and
+  <a href="./receipt-maker.html">receipt maker</a> on this site do the arithmetic for
+  you, remember your business details, and print straight to PDF. They are better
+  than a blank form in every situation where you have a screen in front of you.</p>
+  <p>The printed kit is for the situations where you do not: taking a cash payment at
+  a stall, writing a receipt in someone's kitchen, leaving a signed estimate behind at
+  the end of a site visit, or working somewhere with no signal. A pad of forms in the
+  glovebox has never once failed to load.</p>
+
+  <h2>Printing it</h2>
+  <p>The pages are US Letter. Print at 100% scale rather than &ldquo;fit to page&rdquo;,
+  or the ruled lines will shift and the receipt cut marks will not line up. On A4 paper,
+  choose &ldquo;shrink to fit&rdquo; &mdash; the layout has enough margin to survive it.</p>
+
+  <aside class="cta-box" data-requires-shop>
+    <h3>Would you rather type into it than write on it?</h3>
+    <p>The fillable editions of these forms are what our shop sells: the same layouts
+    with real PDF form fields, so you type your details in, save the file, and reuse
+    it without printing anything. There are trade-specific versions too.</p>
+    <a class="btn btn-primary" data-shop-link href="#" rel="nofollow">Browse the fillable forms</a>
+  </aside>
+
+  <h2>Frequently asked questions</h2>
+  <details class="faq"><summary>Do I have to give you an email address?</summary>
+  <p>No. The download link is a direct link to the file. There is no gate in front of
+  it and no tracking on it.</p></details>
+  <details class="faq"><summary>Can I use these for my business?</summary>
+  <p>Yes, for your own business paperwork, as many times as you like. What you may not
+  do is resell the forms themselves or republish them as your own product.</p></details>
+  <details class="faq"><summary>Can I type into this PDF?</summary>
+  <p>No &mdash; this edition has no form fields, by design. Use the
+  <a href="./invoice-generator.html">free tools</a> on this site if you want to type,
+  or the fillable editions in the shop if you want a saved file you can reuse.</p></details>
+  <details class="faq"><summary>Is there an A4 version?</summary>
+  <p>Not yet. Print the Letter version with &ldquo;shrink to fit&rdquo; enabled; the
+  margins are generous enough that nothing is lost.</p></details>
+  </article>
+</main>"""
+    return page("free-paperwork-kit.html",
+                "Free Printable Invoice, Estimate &amp; Receipt Forms (PDF)",
+                "A free 3-page PDF of printable small business forms: an invoice, "
+                "an estimate with a signature strip, and three tear-off receipts. "
+                "No signup, no watermark.",
+                body.format(kit=KIT_PDF), depth=0)
 
 
 # ---------------------------------------------------------------- legal
@@ -541,6 +641,7 @@ def render_404():
     <li><a href="/margin-markup-calculator.html">Margin and markup calculator</a></li>
     <li><a href="/payment-terms-calculator.html">Invoice due date calculator</a></li>
     <li><a href="/guides/index.html">Guides</a></li>
+    <li><a href="/free-paperwork-kit.html">Free printable forms kit</a></li>
   </ul>
 </article></main>"""
     return page("404.html", "Page not found — " + BRAND,
@@ -583,6 +684,9 @@ def main():
     for t in CALC_TOOLS:
         written.append(write(t["slug"], render_calc_tool(t)))
         slugs.append((t["slug"], "0.9"))
+
+    written.append(write("free-paperwork-kit.html", render_lead_magnet()))
+    slugs.append(("free-paperwork-kit.html", "0.9"))
 
     written.append(write("guides/index.html", render_guides_index()))
     slugs.append(("guides/index.html", "0.7"))
